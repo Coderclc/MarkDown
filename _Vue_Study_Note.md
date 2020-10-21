@@ -24,5 +24,4 @@ UMD = AMD||CommonJS UMD为其糅合,优先判断支持AMD则使用
 
  ES Module  import _ from '' export
 
-## 
 
