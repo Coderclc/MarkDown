@@ -4,6 +4,7 @@
 ##2.标签/元素/标记
 元素头+元素属性+元素内容+元素尾
 全局属性 title  
+
 <meta charset ="UTF-8" >
 <meta charset ="UTF-8" />
 文档声明<!DOCTYPE html>
@@ -19,7 +20,6 @@ p 段落 span 无语义  pre 预格式化文本元素  显示代码  code配合p
 用于 显示特殊符号,两种方式     &单词;  &#数字;<>&lt; &gt; &nbsp;© &copy; & &amp;
 记住这种格式 ((h1[id="chapter$"]>{章节\$})+p>lorem10000)*6
 p.red 生成 <p class="red"></p>
-
 a 超链接元素 3 属性
 1.href="url"
 2.href="#id" 有 id 回到 ID 处,无 id 到 top href="url.html # id" 3.执行 js 代码 <a href="javascript:alert('content')">a</a> 4.发邮件 <a href="mailto:804748585@qq.com"> 5.拨打电话 <a href="tel:13809233994">
@@ -718,7 +718,7 @@ scale()比例缩放, x 轴的几倍,y 轴的几倍
          ydeg : 纵向倾斜度数
          y取值为正，y轴不动,x轴顺时针倾斜一定角度
          y取值为负，y轴不动,x轴逆时针倾斜一定角度
-
+    
          matrix矩阵
           a,b,c,d,e,f
           结论 e对应x轴位移,f对应y轴位移
