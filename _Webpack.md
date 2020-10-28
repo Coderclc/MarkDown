@@ -197,4 +197,27 @@ webpack-bundle-analyzer: 一款分析 bundle 内容的插件及 CLI 工具，以
 
 打包生产的/dist部署到服务器上，浏览器就能够访问网站此服务器的网站及其资源。而获取资源是比较耗费时间的，所以浏览器使用一种名为 [缓存](https://searchstorage.techtarget.com/definition/cache) 的技术。可以通过命中缓存，以降低网络流量，使网站加载速度更快，然而，如果我们在部署新版本时不更改资源的文件名，浏览器可能会认为它没有被更新，就会使用它的缓存版本。由于缓存的存在，当你需要获取新的代码时，就会显得很棘手。导致代码更新了而浏览器没有去重置
 
+<<<<<<< HEAD
 设置 filename: '[name].[chunkhash].js',使打包好的文件命名不同
+=======
+在 webpack 出现之前，前端开发人员会使用 grunt 和 gulp 等工具来处理资源
+
+use: [ 'style-loader', 'css-loader' ]顺序很重要,加载顺序为从右到做
+
+1.  加载Css  [style-loader](https://www.webpackjs.com/loaders/style-loader) (将css-loader内部样式注入到我们的HTML页面)和 [css-loader](https://www.webpackjs.com/loaders/css-loader)(加载.css文件)：
+2. file-loader,加载图片,字体并转存到dist文件夹下
+3. 当文件较小时可使用`url-loader` 功能类似于 [`file-loader`](https://github.com/webpack-contrib/file-loader)，但是在文件大小（单位 byte）低于指定的限制时，可以返回一个 DataURL。
+
+4. 加载数据如JSON 文件，CSV、TSV 和 XML使用[csv-loader](https://github.com/theplatapi/csv-loader) 和 [xml-loader](https://github.com/gisikw/xml-loader)。让我们处理这三类文件：
+
+## 管理输出
+
+使用HtmlWebpackPlugin html可自动关联打包好的js文件
+
+使用[`clean-webpack-plugin`](https://www.npmjs.com/package/clean-webpack-plugin)清理文件夹
+
+webpack及其插件似乎“知道”应该哪些文件生成。答案是，通过 manifest
+
+## 开发
+
+>>>>>>> 4c9f4e95f1be51722bd0d6f6acea45db6f7f8eb5

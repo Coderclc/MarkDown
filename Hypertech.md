@@ -179,6 +179,7 @@ vue cli2 .babelrc  cli3 babel.config.js
 presets:['stage-2']  使用 "babel-preset-stage-2": "6.22.0",babel
 ```
 
+<<<<<<< HEAD
 ## .postcssrc.js
 
 config autoprefixer // to edit target browsers: use "browserslist" field in package.json
@@ -188,3 +189,15 @@ Vcli2 webpack需要配置postcss-loader
 ## VueCookBook
 
 ## VueLoader
+=======
+## d3.JS
+
+## Echart
+
+## hightchart
+
+## mock
+
+## gulp
+
+>>>>>>> 4c9f4e95f1be51722bd0d6f6acea45db6f7f8eb5
