@@ -129,3 +129,32 @@ error a {...} 也会被继承到 seriouts..  a{}
 
 .disabled { color: gray;@extend a;}
 
+## Vue 文件使用scss文件的变量
+
+```
+:export {
+    menuText: $menuText;
+    menuActiveText: $menuActiveText;
+    subMenuActiveText: $subMenuActiveText;
+    menuBg: $menuBg;
+    menuHover: $menuHover;
+    subMenuBg: $subMenuBg;
+    subMenuHover: $subMenuHover;
+    sideBarWidth: $sideBarWidth;
+}
+import variables from '@/styles/variables.scss'
+...
+computed: {
+    variables() {
+        return variables
+    }
+},
+mounted() {
+    console.log(variables)
+},
+```
+
+
+
+
+
