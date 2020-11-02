@@ -126,3 +126,54 @@ svgo 将svg 冗余的信息剔除
 
 
 
+## chokidar
+
+Node.js 提供fs.watch和fs.watchFile用于处理文件监控.但有以下问题
+
+1. OS X系统环境不报告文件名变化
+2. OS X系统中使用Sublime等编辑器,不报告任何事件
+3. 经常重复报告,多数事件通知为rename,不能简单的递归监控文件
+
+```
+const mockDir = path.join(process.cwd(), 'mock') //cwd()执行文件的绝对路径
+
+module.exports = app => {
+    chokidar.watch(mockDir, {
+        ignored: /mock-server/,
+        ignoreInitial: true //default false,捕获add/addDir 事件
+    }).on('all', (event, path) => {
+        console.log(event);  change/add/unlink
+        console.log(path); 路径
+    })
+}
+```
+
+## Mock-server
+
+```
+ devServer: {
+    port: port,
+    open: true,
+    overlay: {
+      warnings: false,
+      errors: true
+    },
+    before: require('./mock/mock-server.js')
+  },
+```
+
+启动本地服务器之前先执行一个函数,传入app  基于app= express()
+
+mock-server.js  创建接口
+
+index.js 	整合所有路径对象, 开发mockserver搭建
+
+user.js......
+
+app.url正则表达式匹配多个路径  res.json()返回json数据格式
+
+注册的接口都 按顺序依次加入到app._router.stack对象中 ,默认有0~11 12 个元素
+
+node.js 清楚require.cache 缓存 因为require的缓存机制,在第一次调用require时即缓存下来,无法hot更新require.cache是一个对象,键为文件路径
+
+require.resolve 查询某个文件的完整绝对路径
