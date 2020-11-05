@@ -1,74 +1,4 @@
-25let 块级作用域, 2 闭包 (function(i){})(i) 3. 保存在对象的属性中
-26 闭包可以理解成“定义在一个函数内部的函数“可以访问外部函数的变量, 创建出来的闭包里面的引用的值会延迟消亡
 
-
- 46 item.price|过滤器  option  filters:{guolvqi(a){return a }}  item.price|guolvqi  (item.price)可不写
-
-  extend 继承 class Person{}   class student extends Person{} 
-  61 1创建 调用Vue.extend()创建组件构造器 ,2 注册调用Vue.component()注册组件 3使用 在Vue实例范围内使用
-  62   const component_constructor = Vue.extend({template:`code_snippet`}) Vue.component("elname",construc)
-  Vue构建要放在组件构造后面
-
-
-  67register component 语法糖,直接在注册时创建组件,全局局部同理
-  68template 的抽离  <script type="text/x-template" id="cpn1"></script> <template></template>
-
-  抽离,1.template抽成外部 2 Vue.extend({})括号的对象抽出来放到构造器上3对象的增强字面量写法
-  在html,短横,大写,都必须用短横,小写可直接用 myCpn  -> my-cpm/my-Cpn
-  在vue,短横必须用短横,大写可用大写,短横
-
-
-props:[]为一个数组时,元素虽然为变量,但也要加引号, v-bind:cmovies="movies write in cpn instance
-props:{}为一个对象 ,数据要指定类型 cmovies:Array cmovies:{type:String,default:"",required:true}
-还支持 String ,Number,Boolean,Array,Object,Date,Function,Symbol 可指定多个数据类型
-默认值为 obj 或者 Arr 时需用 factory function return 原理一样
-required:true 必须要用 data 从父传过来,otherwise error
-还可以自定义类型,cmovies:Person funtion Person(){}
-72 因为 html 的属性不区分大小写,所以 子组件 cMessage 写在属性应该写 c-message
-73 子传父 ,自定义事件 this.\$emit("itemclick",item) 发射自定义事件,还有对象 item 给父组件
-
-
-75 avoid 直接修稿父组件传过来的值,用一个变量来保存,再双向绑定,或者直接@input 修稿父组件 data
-每一次 snum1 重新渲染, input 也会重新获取绑定的值,并不是重新渲染,所以造成我一改变 input 框里的值,因为 snum1 的 render,input 又重新绑定回 ssum2 的值,ssum2 的值只获取一次
-要么直接v-model=""绑定ccmessage 要么绑定cmessage 发送改变message
-watch:{ccmessage(newValue,oldValue){this.$emit("req",newValue)}}当监测到数值的改变时,进行opera
-76 在 par component 操作 son 通过 this.$children 拿到子组件的对象数组  this.$children[index].methods
-不同得组件,或者相同的组件复数,都会添加到子组件的对象数组  
- $childrent 用的比较少,因为取决于下标值,easy to change
-$refs 给组件起属性名 ref="" this.$refs 是一个对象,会把ref=""的value 添加进对象的key,组件作为value
-  77this.$parent. 当父组件为实例时,或者全局注册时,$parent即为Vue实例,否则为父组件
-  78 不能直接使用被嵌套的组件 如cpn2中的cpn1  this.$root 直接访问根组件,即实例
-79 slot 插槽 let component have extend usage method template 中 预留 pre <slot name =""></slot>自定义的写在组件中 slot 可以有默认值 默认替换时回替换掉所有无 name 属性的 slot=""具名插槽 name="clc"
-80 编译作用域 模板的作用域在组件中 ,模板实例的作用域在实例 vue 中
-81 $refs, $children 是创造出来的对象,无法在初始进行数据绑定和计算
-83 作用域插槽的使用,在模板实例中使用组件中的数据,1 在 slot 标签中(模板中) 通过 v-bind:变量="data" 2.在 div 中 slot 标签之间替换 插入一个<template></template> 2.5.2 以上可以用 div ,
-添加一个属性 v-slot/slot-scope="slot(任意)"创建出一个对象 slot,数据在这个对象中
-84aa join("-") 把一个数组一"-"拼接, 并且以字符串的形式返回
-84 code 量大带来的问题,变量名容易重复 ,可以大的匿名函数包裹(function(){})()
-es5 方法,整个文件放在一个匿名函数中,将匿名函数中的变量,函数都保存在一个对象中
-
-
-85 commonJS 的导出 语法在 aaa.js 文件 module.exports={ flage:flag } 通过底层 parse node 环境可以用
-var aaa =require("./aaa.js") var flag =aaa.flag  
- 对象的解构 var {flag,sum}=require("./aaa.js")
-86 es6 的导出 1 直接 export const clc=1 2 最后 const clcl export {clc}
-export default import 起名 不用括号 from ""
-import *as clc from"./aaa.js" 把所有的导出都 save 到 clcobj 中
-本身是不支持的,但是添加了 type="module"后,浏览器作文底层  支持es6
-87webpack 现代化的 javascript 静态模块打包工具 处理模块化的依赖关系
-common tools grunt/gulp/webpack/rollup
-88 只能做简单操作,不能使用模块化管理 grunt/gulp
-89 webpack 配合 common js 模块化开发思路, distribution src 两个文件夹
-src 放开发的 development 的 js js 中的 module 采用 comonjs 语法,然后采用 webpack 来打包生成 bundel.js
-webpack 会自动处理模块之间的依赖
-90 创建一个 webpack.config.js module.exports={entry:"",output:{path:"绝对路径/动态",filename}}
-因为要依赖 node 相关的东西 ,用指令 npm init 再用 npm install
-导入一个对象 const path = require("path") path.resolve(**dirname,"dist") **dirname 全局上下文对象  
- 91 映射 webpack 指令 为 npm run
-92 要在本地文件夹装一个 webpack 开发时依赖,运行时依赖 只是在开发需要 装的时候加一个终端命令
-npm install webpack@3.6.0 --save-dev 指令打包的一个优点,优先在局部找对应的 webpack
-93 loader 加载 css 图片 es6->es5,scss,less->css 要用 webpack 的拓展 loader require(csspath)
-css-loader 只负责 loadercss 文件 ,style-loader 将模块的导出作为样式添加到 DOM 中 读取时从右向左 先读取再添加
 94 less 文件 npm install --save-dev 1.less-loader 2.less 加载器,css 转换器 同理
 95 url loader limit: 8192byte 当图片的大小 kb*1024 小于 limit 会将图片编译成 bae64 字符串形式直接保存在文件 bundle.js 文件中,不需要用另外一个文件来 save, 大于的时候回采用另外一个 loader file loader,会把图片打包到 dist file 中一起发送到 serve,用哈希算法防止命名重复自动生成名字
 在 config 采用配置 publicPath"" 规定所有已经解析的文件目录，url 相对于 index.html。
@@ -256,7 +186,6 @@ noedmon app.js
 var xhr = new XMLHttpRequest();创建ajax对象 设置请求地址和方式xhr.open("get","url")发送请求
 xhr.send,响应时自动调,xhr.onload=function(){xhr.responseText}
 
- <script>
 xhr.responseText 返回的数据都是JSON字符串
 本地服务器搭建  const express = require("express")const path  = require("path")
 const app = express(); app.use(express.static(path.join(__dirname,"public")))
@@ -293,6 +222,7 @@ const contentType = xhr.getResponseHeader("Content-Type") 获取响应头返回�
 contentType.includes("application/json")  在为true
 Object.assign(defaults,options) 覆盖默认值
 art-template 的实现 模板引擎
+
 <script src="./js/template-web.js"></script><div id="app"></div>  <script id="tp1"type="text/html"><div class="box">{{username}}{{age}}</div></script>  <script>const html=template("tp1",{username:"chenlicheng",age:18})document.getElementById("app").innerHTML+=html</script>
 <script>   {{each info}}{/each} 循环 template.defaults.imports.dateForMat=dateForMat 向模板暴露一个函数,跟vue 的computed 一样
 验证邮箱,在前端验证规则 ,服务器验证是否可用
@@ -355,6 +285,7 @@ ecma6语法  `${id}`
 XML 语言被设计用来传输和存储数据。 eXtensible Markup Language 重点在于传输和存储数据
 HTML 用于展示数据   
 获取XMLDOM  XMLdom.getelemtns by("tagname") 获取节点.innerHTML获取信息
+
 
 
 Vuex vue.js的状态管理模式, 集中式存储管理,  也集成到Vue的官方调试工具devtools extension 提供了零配置time-travel,状态快照导入导出高级调试功能
@@ -502,43 +433,10 @@ import{mapActions} from    在methods中 ...mapActions([""])使用的时候要�
   FastClick  解决浏览器自带的wait 300ms delay to check if enlarge
   npm install fastclick import FastClick from "fastclick"  FastClick.attach(document.body)
 
-  vue-lazyload import VueLazyLoad from "vue-lazyload" Vue.use(VueLazyLoad,{loading}) v-lazy
-
-  css 单位装换为 vw  vh
-  postcss-px-to-viewport   iphone 6设计稿 (750×667)
-
-  linux->centos->nginx
-
   响应式原理  把对象传进vue时,创建Observer new Observer 响应式系统
   把data数据forEach遍历,通过Object.defineProperty(obj,key,{
     set(newValue){},get(){}}), 给每一个数据创建一个dep,dep1,dep2,当value发生改变时,会触发set(newValue)方法中,获取访问obj.key,会触发get方法,当使用这个数据时,在get中 dep,在哪里使用了这个数据,就给他创建分发一个watcher,触发dep中ed添加sub[]数组方法把watcher 添加到类Dependency中的 subscriber数组,在set方法中,当数据放生了变化,触发dep.notify方法,depnotify会遍历数组中的watcher,并且触发watcher中的一些方法
     name->Dep>subscriber->[watcher1watcher2,]
-
-# v-slot=""的速写属性
-PascalCase 大驼峰
-camelCase 小驼峰
-kebab-case 短横
-组件的 data 必须是一个函数
-单文件组件的文件名应该要么始终是单词大写开头 (PascalCase)，要么始终是横线连接 (kebab-case)。
-和父组件紧密耦合的子组件应该以父组件名作为前缀命名。|- TodoList.vue|- TodoListItem.vue└─ TodoListItemButton.vue
-在单文件组件中没有内容的组件应该是自闭合的。能单闭合则单闭合
-在声明 prop 的时候，其命名应该始终使用 camelCase，而在模板中应该始终使用 kebab-case。
-Props 顺序  标签的 Props 应该有统一的顺序，依次为指令、属性和事件。
-export default {
-  name: '',
-  mixins: [],
-  components: {},
-  props: {},
-  data() {},
-  computed: {},
-  watch: {},
-  created() {},
-  mounted() {},
-  destroyed() {},
-  methods: {},
-};
-
-动态渲染img要用item?require()
 
 
 

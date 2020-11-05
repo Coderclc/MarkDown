@@ -5,19 +5,28 @@
 ## H5
 
 - 文档声明 \<!DOCTYPE html>
+
 - \<html>元素在html5非必须,在xhtml为必须的
+
 -  lang="en" lang="zh-CN"过时了 lang="zh-cmn-Hans">中国大陆官方用语汉语简体
 
 - \<meta> 文档原数据 ,charset="UTF-8"字符编码
+
 - 协议名://主机号:端口号/路径 https://localhost:80/indedx
+
 - http默认端口80 https默认端口号为443
+
 - 当打开的 url 协议名和原本协议名向同时,协议名可省略,//斜杠不能省略
+
 - map和area元素
+
 - \<figure>标记图像 \<figcaption>图像标题
 
 - \<video>\<audio>
 
 - 无语义化 div 语义化 header footer article section aside
+
+- browser script可添加type=module支持esmodule
 
   
 

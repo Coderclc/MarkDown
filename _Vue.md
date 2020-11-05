@@ -249,7 +249,7 @@ v-on和 v-on:input 等不共存,v-on='计算属性' return Object.assign(target,
 
 ### 插槽
 
-模板中\<slot name='c'>\</slot>会被替换  \<div slot='c'/>(旧用法)  \<template v-slot:c>
+模板中\<slot name='c'>\</slot>会被替换  \<div slot='c'/>(旧用法)  \<template v-slot:c>新
 
 父级模板里的所有内容都是在父级作用域中编译的；子模板里的所有内容都是在子作用域中编译的。
 
@@ -341,6 +341,8 @@ $parent访问父组件实例
 访问子组件,使用属性ref引用,推荐 ref=clc  this.$refs.clc  但要避免在模板或计算属性中访问 `$refs`,因为他不是响应式的,只会在组件渲染 完成之后生效
 
 provide和inject 在祖代provide,后代都可以inject
+
+$refs, $children 等都是在生命周期过程中创建的,无法在初始data操作
 
 ```
 provide: function () {
