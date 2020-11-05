@@ -179,7 +179,6 @@ vue cli2 .babelrc  cli3 babel.config.js
 presets:['stage-2']  使用 "babel-preset-stage-2": "6.22.0",babel
 ```
 
-<<<<<<< HEAD
 ## .postcssrc.js
 
 config autoprefixer // to edit target browsers: use "browserslist" field in package.json
@@ -189,7 +188,6 @@ Vcli2 webpack需要配置postcss-loader
 ## VueCookBook
 
 ## VueLoader
-=======
 ## d3.JS
 
 ## Echart
@@ -200,4 +198,36 @@ Vcli2 webpack需要配置postcss-loader
 
 ## gulp
 
->>>>>>> 4c9f4e95f1be51722bd0d6f6acea45db6f7f8eb5
+## websocket
+
+- [µWebSockets](https://github.com/uWebSockets/uWebSockets)
+- [Socket.IO](http://socket.io/)
+- [WebSocket-Node](https://github.com/theturtle32/WebSocket-Node)
+- websocked
+- nodejs-websocket
+
+websocked.exe
+
+```
+./websocketd --port=8080 node ./server.js
+//server.js
+for(let i = 0 ;i<100;i++){
+	console.log(i);
+}
+const ws = new WebSocket("ws:localhost:8080")
+
+ws.onopen = function(evt) { 
+    console.log("Connection open ..."); 
+    ws.send("Hello WebSockets!");
+  };
+  // monitor i
+  ws.onmessage = function(evt) {
+    console.log( "Received Message: " + evt.data);
+    // ws.close();
+  };
+  ws.onclose = function(evt) {
+    console.log("Connection closed.");
+  }; 
+
+```
+
