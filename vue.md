@@ -1,10 +1,4 @@
-​	
-.gitignore   syntax
-1.#为注释 忽略 ,2 linux 通配符 * 号表示任意个字符,?问号表示一个字符,[abc]方括号为可选范围
-{string1,string2} 大括号为可选字符串
-*.txt 忽略所有.txt 结尾的文件  !lib.txt 除外 
-git add filename  git reset filename  ==git rm --cached filename  workdir 和stage切换
-查看状态  git status  git status -s   查看更改  尚未缓存的改动：git diff   
+
 git commit -am '修改 hello.php 文件'   跳过modify再次提交stage
 git rm <file>   git rm -f<file>  跟踪过 强制删除,  git rm --cached <file>不删除文件,删除track
 git branch name  创建分支   git checkout name  切换分支  git branch -d name 删除
