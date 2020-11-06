@@ -6,6 +6,7 @@
 
 1. webpack.NamedModulesPlugin is not a constructor
 2. sideEffects:false 导致css无法被打包
+3. new webpack.BannerPlugin("版权归 clc 所有") 版權插件
 
 ## 安装
 
@@ -46,17 +47,16 @@ exe webpack by webpack.config.js
 动态打包所有的依赖项,通过 loader *引入任何其他类型的文件*。
 
 ```
-   module: {
-+     rules: [
-+       {
-+         test: /\.css$/,
-+         use: [
-+           'style-loader',
-+           'css-loader'
-+         ]
-+       }
-+     ]
-+   }
+{
+    test: /\.(png|svg|jpeg|gif)$/,
+    use: [{
+        loader: 'file-loader',
+        options: {
+            outputPath: './img'
+            // publicPath: './img'
+        }
+    }]
+}
 ```
 
 解析 :webpack	根据正则表达式匹配决定哪些文件使用那些loader
@@ -74,6 +74,8 @@ use: [ 'style-loader', 'css-loader' ]顺序很重要,加载顺序为从右到做
 4. 加载数据如JSON 文件，CSV、TSV 和 XML使用[csv-loader](https://github.com/theplatapi/csv-loader) 和 [xml-loader](https://github.com/gisikw/xml-loader)。让我们处理这三类文件：
 
    在 webpack 出现之前，前端开发人员会使用 grunt 和 gulp 等工具来处理资源
+   
+5.  url loader limit: 当图片的大小 kb*1024 小于 limit 会将图片编译成 bae64 字符串形式直接保存在 文件中. 大于使用 file loader,会把图片打包到 dist 
 
 ## 管理输出
 
