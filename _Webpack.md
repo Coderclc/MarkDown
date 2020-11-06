@@ -6,7 +6,6 @@
 
 1. webpack.NamedModulesPlugin is not a constructor
 2. sideEffects:false 导致css无法被打包
-3. new webpack.BannerPlugin("版权归 clc 所有") 版權插件
 
 ## 安装
 

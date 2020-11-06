@@ -37,122 +37,6 @@ const i18n = new VueI18n({
 new Vue({ i18n }).$mount('#app')
 ```
 
-### 格式化
-
-具名格式
-
-```
-const messages = {
-  en: {
-    message: {
-      hello: '{msg} world'
-    }
-  }
-}
-<p>{{ $t('message.hello', { msg: 'hello' }) }}</p>
-// 结果 <p>hello world</p>
-```
-
-列表格式
-
-```
-const messages = {
-  en: {
-    message: {
-      hello: '{0} world'
-    }
-  }
-}
-<p>{{ $t('message.hello', ['hello']) }}</p>
-<p>{{ $t('message.hello', {'0': 'hello'}) }}</p> 也能接受具名格式
-```
-
-html格式化  ! XSS攻击风险
-
-```
-    message: {
-      hello: '<h1>哈哈</h1>'
-    }
-     <p v-html='$t("message.hello")'></p>
-```
-
-### 复数
-
-```
-const messages = {
-  en: {
-    car: 'car | cars',
-    apple: 'no apples | one apple | {count} apples'
-  }
-}
-$tc
-<p>{{ $tc('car', 1) }}</p>
-<p>{{ $tc('car', 2) }}</p>
-
-<p>{{ $tc('apple', 0) }}</p>
-<p>{{ $tc('apple', 1) }}</p>
-<p>{{ $tc('apple', 10, { count: 10 }) }}</p>
-```
-
-### 日期
-
-```
-const dateTimeFormats = {
-  'en-US': {
-    short: {
-      year: 'numeric', month: 'short', day: 'numeric'
-    },
-    long: {
-      year: 'numeric', month: 'short', day: 'numeric',
-      weekday: 'short', hour: 'numeric', minute: 'numeric'
-    }
-  },
-  'ja-JP': {
-    short: {
-      year: 'numeric', month: 'short', day: 'numeric'
-    },
-    long: {
-      year: 'numeric', month: 'short', day: 'numeric',
-      weekday: 'short', hour: 'numeric', minute: 'numeric', hour12: true
-    }
-  }
-}
-const i18n = new VueI18n({
-  dateTimeFormats
-})
-
-new Vue({
-  i18n
-}).$mount('#app')
-<div id="app">
-  <p>{{ $d(new Date(), 'short') }}</p>
-  <p>{{ $d(new Date(), 'long', 'ja-JP') }}</p>
-</div>
-<div id="app">
-  <p>Apr 19, 2017</p>
-  <p>2017年4月19日(水) 午前2:19</p>
-</div>
-```
-
-### 数字
-
-```
-const numberFormats = {
-  'en-US': {
-    currency: {
-      style: 'currency', currency: 'USD'
-    }
-  },
-  'ja-JP': {
-    currency: {
-      style: 'currency', currency: 'JPY', currencyDisplay: 'symbol'
-    }
-  }
-}
-```
-
-
-
 ## mescroll
 
 betterscroll?
@@ -232,4 +116,11 @@ ws.onopen = function(evt) {
 ```
 
 ##  vue-lazyload 
+
+## FastClick
+
+```
+ 解决浏览器自带的wait 300ms delay to check if enlarge
+  npm install fastclick import FastClick from "fastclick"  FastClick.attach(document.body)
+```
 

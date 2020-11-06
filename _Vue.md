@@ -344,6 +344,8 @@ provide和inject 在祖代provide,后代都可以inject
 
 $refs, $children 等都是在生命周期过程中创建的,无法在初始data操作
 
+$refs 除了定位cpn还可以定位el
+
 ```
 provide: function () {
   return {

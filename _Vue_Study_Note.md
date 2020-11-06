@@ -24,4 +24,10 @@ UMD = AMD||CommonJS UMD为其糅合,优先判断支持AMD则使用
 
  ES Module  import _ from '' export
 
+## 三、事件总线
 
+轻量vuex $bus
+
+Vue.prototype.$bus= new Vue() this.$bus.$emit("imgLoaded")this.$bus.$on("imgLoaded",()=>{console.log("我监听到了你的变化");})
+
+ this.$bus.$off("imgLoaded",函数变量名)

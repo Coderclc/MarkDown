@@ -1,4 +1,30 @@
 
+132 git
+版本控制,版本迭代,主流的版本控制器有 git SVN,cvs,vss,tfs
+本地版本控制 集中版本控制 SVN(版本保存在同一个 server)协同开发同步更新 分布式版本控制(所有版本信息都同步在本地的用户中)
+git 是目前世界上最先进的分布式 ban'b 控制系统 ,是 linux 创始人用来替代 bitkeeper 的
+Git bush unix 与 linux 风格的命令行 ,使用最多 recommend 最多
+git cmd windows 风格命令行
+git gui 图形界面 git
+basic linux command   
+1.cd 进入 2 cd.. 上一级 3 pwd 显示当前路径 4ls(ll)列出目录 ll 更详细 5 touch touch index.js
+新建文件 6 rm rm index.js 删除文件 7mkdir 新建文件夹 8 rm -r 删除文件夹
+9 mv mv index.js src src 目标文件夹 10reset 初始化终端 11clear 清屏 12history 查看命令历史
+13 help 帮助 14 exit 退出 15#表示注释 16 rm -rf / 删除 linux 所有文件
+git config -l 查看 git 所有的 list 配置清单
+git config --system -l 查看系统本身的配置清单
+git config --global -l 查看用户的配置清单
+D:\Program Files\Git\etc\gitconfig 系统的配置文 user 下的 git config
+$ git config --global user.name "Chenlicheng"  配置了才可以上传
+$ git config --global user.email "804748585@qq.com"--global 为全局配置,若想要项目使用不同去掉-g
+搭建本地仓库 git init 克隆远程仓库 git clone [url]
+git add . git commit -m " 注释"
+.gitignore   syntax
+1.#为注释 忽略 ,2 linux 通配符 * 号表示任意个字符,?问号表示一个字符,[abc]方括号为可选范围
+{string1,string2} 大括号为可选字符串
+*.txt 忽略所有.txt 结尾的文件  !lib.txt 除外 
+git add filename  git reset filename  ==git rm --cached filename  workdir 和stage切换
+查看状态  git status  git status -s   查看更改  尚未缓存的改动：git diff   
 git commit -am '修改 hello.php 文件'   跳过modify再次提交stage
 git rm <file>   git rm -f<file>  跟踪过 强制删除,  git rm --cached <file>不删除文件,删除track
 git branch name  创建分支   git checkout name  切换分支  git branch -d name 删除
@@ -87,51 +113,9 @@ beforeRouteEnter  beforeRouteUpdate (2.2 新增)  beforeRouteLeave 监控组件�
  166 起别名 '@': resolve('src'), 'assets': resolve('src/assets'), 
  在html中attr使用要加~  css backgroud:url(~@/assets/img)
 
-Ajax请求  asynchronous javascript  and xml
-网速慢时,加载时间慢,页面一刷新,所有内容消失,页面跳转又要重新刷新页面,资源浪费
-application:上拉加载,列表切换,表单验证,搜索提示,网站环境才能生效
-不用刷新页面即可与服务器通讯的方法还有:1Flash 2.java applet 2框架 3flame 4xmlhttprequest 
-客户端(xhtml,css,js)<->传输(协议:xmlhttp,载体,文本txt,xml,json)<->服务器端(php,等)
-noedmon app.js
-var xhr = new XMLHttpRequest();创建ajax对象 设置请求地址和方式xhr.open("get","url")发送请求
-xhr.send,响应时自动调,xhr.onload=function(){xhr.responseText}
 
-xhr.responseText 返回的数据都是JSON字符串
-本地服务器搭建  const express = require("express")const path  = require("path")
-const app = express(); app.use(express.static(path.join(__dirname,"public")))
-app.listen(2333)app.get("/first",(req,res)=>{res.send({name:"chenlicheng",age:18})})
-服务器内的文件要在服务器内的路径  localhost:2333默认打开的是localhost:2333/index.html
-Js有一个对象 JSON.parse() 转换成对象 JSON中属性名必须加双引号,不能为单引号
-form 表单的get()效率高,隐私暴露 和post 隐私性高
-ajax get 请求xhr.open("get","http...info?name=chenlicheng&age=18") xhr.send()
-post 请求 xhr.setRequestHeader("Content-Type","application/x-www-form-urlencoded")
-xhr.send(name=chenlicheng&age=18)
-报文 传递的数据块 传送的数据和一些附加信息,这些数据要遵循一些格式
-使用模块const bodyParser =require("body-parser") app.use(bodyParser.urlencoded())
-就可以通过res.body访问请求体内的内容
-application/x-www-form-urlencoded 对应name=chenlicheng&age=18格式
-"application/json" 对应的js对象的JSON格式  JSON.stringify(obj)
-xhr.send(JSON.stringify(data))
-app.use(bodyParser.json()) 安装插件的时候换成json  req.body  req.query
-无论服务器发送什么,只有执行了res.send(),静态才能执行onload=()=>{}
-ajax 创建,配置,发送请求,接受数据响应都会对应一个ajax状态码
-0请求了但未初始化,即未调用open(),1已初始化未发送 2 已经发送未响应 3正在接受响应4响应完成
-获取ajax状态码 xhr.readyState()  xhr.onreadystatechange()当ajax状态码变化时触发,会不断的回调
-onready 虽然兼容ie低版本,但是调用多次,效率低
-获取http的状态码 xhr.status    res.status(400).send("err  or")访问/error路由时,返回错误响应
-HTTP status  200 OK 404 not found服务器接收不到  400 bad request返回结果不是预期结果
-500服务器端出错  网络中断 ,会触发xhr下的onerror 事件
-ajax状态码 ajax请求的过程,请求发生到哪一步 ajax对象返回的
- http status 请求的处理结果  服务器返回的
- const fs = require("fs")  fs.readFile("./text.txt",(err,result)=>{res.send(result)})
- node环境操作txt文件   
- 解决低版本ie auto cache 问题,当请求的router与原来相同时,会从缓存中提取,只需拼接math.random()
- 随机生成0到1的query即可    ajax同步异步 本身就是异步操作或者加上/?time=+new Date()时间蹉
- 截取query    query=query.substr(0,query.length-1)  Date.parse(new Date())
-const contentType = xhr.getResponseHeader("Content-Type") 获取响应头返回的数据类型
-contentType.includes("application/json")  在为true
-Object.assign(defaults,options) 覆盖默认值
-art-template 的实现 模板引擎
+
+
 
 <script src="./js/template-web.js"></script><div id="app"></div>  <script id="tp1"type="text/html"><div class="box">{{username}}{{age}}</div></script>  <script>const html=template("tp1",{username:"chenlicheng",age:18})document.getElementById("app").innerHTML+=html</script>
 <script>   {{each info}}{/each} 循环 template.defaults.imports.dateForMat=dateForMat 向模板暴露一个函数,跟vue 的computed 一样
@@ -198,110 +182,10 @@ HTML 用于展示数据
 
 
 
-Vuex vue.js的状态管理模式, 集中式存储管理,  也集成到Vue的官方调试工具devtools extension 提供了零配置time-travel,状态快照导入导出高级调试功能
-单个页面的状态管理  action->state->view->action
-Vuex 的配置import Vue from "vue"import Vuex from "vuex"Vue.use(Vuex)
-const store = new Vuex.Store
-({state:{},mutations:{state,payLoad},actions:{context,payload},getters:{state ,getters},modules:{}})
-common 放在 state  通过$store.state.访问
-vue components->actions->mutations->state->vue component
-Devtools vue开发的浏览器插件  记录修改state的状态  是在Mutations这个步骤进行记录,如果直接通过$.store.state改变 状态,Devtools将会跟踪不到  可以跳过actions  ,mutations进行同步操作
-actions -> Backend api 后端api  async  
-mutations 中的方法会默认传入state 或者通过this.state访问,触发事件通过this.$store.com("mutations")
-State 单一状态树  Single Source of Truth 单一数据源  资源统一集合到一个store中
-Getters  ?= computed   Getters 中的方法可以有两个params state ,getters  
-getters  属性后面加()自定义决定返回,  通过getters返回一个函数  store.getters 暴露
-Mutation Vuex.store upgrade 更新的唯一方式 提交summit mutation   分为两部分,commit 字符串的事件类型,this.$store.commit("change",num) 可以传递一个num值   Payload  负载 载荷可以为str,obj
-一个回调函数handler  第一个参数为 state  第二个参数为commit过来的value  
-一个是getters显示的时候传参,一个是mutation事件传参
-/使用计算属性连接vuex的变量，在用watch去监听，变相的实现监听vuex内部state变化
-commit("str",num)=commit({type:"str",num:num})     mutation中改为payLoad
-state 中的属性attr对应一个Dep观察者模式,Dep->[watcher,watcher]每一个attr的展示就是一个watcher,通过Dep更改watcher,初始化的属性会被加入到响应式系统,而响应式系统会监听属性的变化,当属性改变时,会通知界面的所有watcher,进行刷新,后添加的不会加入到响应式系统,很多都能响应,唯独直接通过索引修改数组/对象不行,可通过 Vue.set(arr/obj,index/key,"value")  delete key 不能响应式  Vue.delete(arr/obj,key/v)
-growUp(){}==["growUp"](){}==[常量](){} 函数名的替代
-mutations 中进行async 异步操作devtools无法catch  所以要加多一步action ,$store 就是new 的实例
-有两个方法 commit,dispatch  通过dispatch("事件类型"),在action(参数都带有context)中异步操作发送 commit(),在mutation中进行改变,dispath与commit一样有直接还有对象形式的提交风格context.commit
-意思就是让异步操作通过Promise优雅,在dispatch中调用 调用dispatch可以获得对应事件类型的返回值
-modules:{moduleA,moduleB},const muduleA={state:,mutation.......}
-把通过$store.state.moduleA.message  把modulea的state添加到state中,其余的$store.getters.event相同,会自己去找  模块中的getters(state,getters,rootstate) 多了一个根state
-module中的action中的context是很大的对象,包含commit,dispatch,getters,rootGetters,rootState,state
-actions 中的context (context)可写成({state,commit,rootState}) 还有一些其他的,可取可不取
-对象的解构 const obj = {name:"why",age:18,height:1.77} const {name,age,height}=obj
-数组的解构 const names=["why","clc","wjp"] const [name1,name2,name3]=names
-结合Promise 的异步Vuex的优雅写法    this.$store.dispatch(INCREMENT).then(res => {this.$store.commit("up");console.log("我已经完成了");});
 
-axios  ajax i/o system 是一个基于 promise 的 HTTP 库
-1.传统XHR,rubbish2.$ajax 冗余3,vue-sourece stop upgrade4 axios
-axios(confing),axios.request(),axios.get() .delete  .head .post  . put .patch
-axios({url:"http://localhost:3000/axios",baseURL,tiemout,method:"get").then(res=>{console.log(res);})
-axios结合promise的使用  get请求可自行拼接,也可 params:{type:"pop/sell",page:1}
-"http://152.136.185.210:8000/api/n3     recommend/(home/data) "type="pop& age=1
-axios.all([axios({}),axios({})]).then(result=>{})  /.then(axios.spread((res1,res2)=>{}))
-axios的全局配置  axios.default.baseURL=
-实际上的服务器请求时通过代理服务器nginx,分布式自动分发
-创建对应的axios的实例
-const instance1 = axios.create({baseURL:""})  instanece1({url:""}) 不用全局的axios({})
-axios的模块封装,防止对某种模块的依赖太大,将其进行独立封装,
-instance.interceptors.request.use(config=>{return config},err=>{}) 拦截config操作,显示动画,拦截登录,跳转其他界面,让用户携带信息token
-instance.interceptors.response.use(res=>{return res},err=>{}) 
 
-一般许可证选择MIT
-1创建仓库 ,git-clone 复制粘贴,除了 .git文件,git add. git commit -m "#" git push
-2创建 git remote add origin url
 
-supermall
-项目的划分
-->src
-assets/[css|img]  components/[common|content] 放公共的组件  views  放大组件 router   store  network    common/const.js
-normalize.css   css中  :root{}获取根元素html  
-在css中定义变量 --large-size:50px; 使用  font-size:var(--large-size:50px)
 
-cli4中别名配置的坑 html中使用要加~ css中使用要加~
-@在cli3/4中已经默认是相当于__dirname拼接上,src 就是src,不能再定义不然冲突
-path.join(__dirname,dir)  path.join(__dirname,"..",dir) 拼接上..会把最后一个路径切掉
-publice 下的 icon  index <link rel="icon" href="<%= BASE_URL %>favicon.ico">
-函数调用,压入函数栈(保存函数调用过程中的所有变量)
-函数调用结束->弹出函数栈(释放所有的变量)
-变量res在栈中保存着堆的指针,函数结束,指针回收,堆内的数据打上垃圾回收标签
-@touchstart @touchmove @touchend  针对移动端的事件
-this.message 数据可以不用初始化直接在方法或者等使用
-cloneNode() 拷贝一个节点 传true 递归复制子孙节点,否则只复制当前节点
-
-float浮动,positon定位,通过设置left,right移动,通过分段移动制造动画
-通过flex布局,通过css3进行动画移动,transition
-
- flex-shrink  flex-items不会撑大flex-container 的大小,默认会执行flex-shrink的收缩,当flex-shrink=0时,不收缩,多出的算溢出
-原生js在移动端scroll会卡顿,不建议使用
-
-注释,分布,布局要在写代码的时候就complete,
-position: sticky;top: 44px; 吸顶效果 
-切换,判断index==currentindex
-const page = arguments[1]?arguments[1]:1 通过判断argument设定默认值 es6可直接赋值
-const page = arguments[1]||1
-const a=a.concat ===   a.push(...[arr])  ...会把数组解析添加
-
-两种思路,内容由编辑者决定时,将v-for作为插槽插入,当内容展示为数据库的数据时,将内容传递到子组件中展
-原生部分面积滚动, 定高度, o'ver-flow scrooly
-
-Bscroll
-better-scroll 滚动 import BScroll from let wrapper = document.querySelector('.wrapper')let scroll = new BScroll(wrapper)  wrapper>只跟一个整体的content
- const bscroll=new BScroll(document.querySelector("#catalog"),{probeType:2})
-bscroll.on("scroll",(position)=>{console.log(position);})
-probeType 01不监测,2以上监测,3监测惯性
-pullUpLoad:true     bscroll.on("pullingUp",()=>{console.log("我到达了底部");}) 监听事件
-exe bscroll.finishPullUp()完成第一次监听
-ref=""不止可以用于子组件,还可以用于查找某个元素对象,dom,找当前页面的某个对象
-height: 100vh;viewport height 自动算成视口高度 
- calc(100% - 49px);  高度计算 切记要加空格隔开 1自动计算高度.2绝对定位
- .native修饰符,监听组件实例的点击
- scrollTo(0,0,500),
- 解决betterscroll 在图片渲染之前提前计算好content高度的问题
- 原生js listernr 图片 img.onload=function(){}
- vue中@load = "event"
- 1.每一次图片加载完成,发送commit修改vuex中的,state,把state数据绑定给一个计算属性,再监听计算属性的改变,进行刷新refresh() 重新计算高度
- 事件总线  Vue.prototype.$bus= new Vue() this.$bus.$emit("imgLoaded")this.$bus.$on("imgLoaded",()=>{console.log("我监听到了你的变化");})
- 把发出的函数用一个变量保存起来,
- this.$bus.$off("imgLoaded",函数变量名)
- @input  value 改变就触发  @change  失去focus触发
  debounce 防抖,将上一个定时器关闭  clearTimeout(timer);timer = setTimeout(() => {console.log("我只执行了一次");}, 300);
  封装 debounce(fun, delay) {let timer return (...args) => {timer && clearTimeout(timer);timer = setTimeout(() => {fun.apply(this, args);}, delay);};},
 理解 const args = 一个数组,包含了所有传入return 的心函数的参数   args是一个数组
@@ -326,27 +210,8 @@ const date= new Date(value*1000)format(data,"yyyy/MM-dd hh(HH):mm:ss") h12H24
 两个路由使用相同的emit方法时不会各自触发,但是使用相同的状态管理绑定给watch时,若组件没销毁则会触发
 const unwatch = this.$watch("name",cb)   取消只能取消掉创建的,不能取消掉已经写好的
 
-部分混入 const mixin={mounted:()=>{}}  然后在组件内选项 mixins: [mixin]
-生命周期的函数可以抽,会合并,方法内的函数不会合并,会覆盖
-crated之前初始化部分二层结构的数据, mounted只是挂载el,但是并不一定渲染完成,渲染需要一定的时间,
+
 this.nextTick保证渲染完成,但是图片不一定加载好
-
-arrs.find((arr)=>{return })  会按照顺序吧arr中的按顺序传入,满足return这个arr
-import { mapGetters } from 'vuex'  ...mapGetters函数,将getter混入computed
-...mapGetters(['doneTodosCount','anotherGetter',// ...]) 映射
-...mapGetters({lenght:"doneTodosCount"}) 起别名  在computed中注册
-forEach  filter  map reduce
-import{mapActions} from    在methods中 ...mapActions([""])使用的时候要加this
-  top: 50%;left: 50%;transform: translate(-50%,-50%);根据自身的比例来居中fixed  
-  export default obj ,Vue.use(obj)  触发obj.install=(Vue)=>{}
-
-  FastClick  解决浏览器自带的wait 300ms delay to check if enlarge
-  npm install fastclick import FastClick from "fastclick"  FastClick.attach(document.body)
-
-  响应式原理  把对象传进vue时,创建Observer new Observer 响应式系统
-  把data数据forEach遍历,通过Object.defineProperty(obj,key,{
-    set(newValue){},get(){}}), 给每一个数据创建一个dep,dep1,dep2,当value发生改变时,会触发set(newValue)方法中,获取访问obj.key,会触发get方法,当使用这个数据时,在get中 dep,在哪里使用了这个数据,就给他创建分发一个watcher,触发dep中ed添加sub[]数组方法把watcher 添加到类Dependency中的 subscriber数组,在set方法中,当数据放生了变化,触发dep.notify方法,depnotify会遍历数组中的watcher,并且触发watcher中的一些方法
-    name->Dep>subscriber->[watcher1watcher2,]
 
 
 

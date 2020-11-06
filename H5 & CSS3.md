@@ -135,39 +135,28 @@
 ```
 
 - 厂商前缀   ie 前缀 -ms-   谷歌 safari -webkit-   opera -o-   火狐 -moz-
-
 - css hack  主要针对 ie,设置特有的样式 .特殊前缀 \*前缀,\_前缀 \9 后缀,各种兼容
-
 - 渐进增强和优雅降级1.先写个都能运行的,再给新版本加新样式 2.先写最新的,再针对低版本处理
-
 - 居中总结 
 
   - 水平方向:行盒 text-align:center 块盒 定宽 margin:atuo 
 
   - 垂直方向:行盒 line-height vertical align-items
   - 定位法 定大小,position,lrtb = 0,margin:auto
-
 - 图片失效,高度坍塌,因本身是行盒,改成块盒或者行块盒即可
-
 - border制作三角形
-
 - box-shadow x offset yoffset blur spread color outset/inset 
 - text-shadow
 - background-origin 
 - background-clip 
-
--  渐变gradient
-
+- 渐变gradient
 - 径向渐变(Radial gradients)
 - text-overflow  clip 裁切 ellipsis 省略号
 - 2D :transform:translate(x 轴,y 轴)移动 rotate(30deg) 默认顺时针,负数逆时针  scale()比例缩放, x 轴的几倍,y 轴的几倍
-
 - 3D: transform: rotateX(120deg); transform: rotateX(120deg); 沿着 x,y 轴翻转
 - transiton 过渡
-
 - column 创建文本排列
 - 先找规律,写公共样式
-
 - flex
 - - flex container
   - - flex-direction 水平排列方向
@@ -183,11 +172,10 @@
     - flex-basis 占据主轴空间大小
     - flex flex-grow flex-shrink flex-basis
     - align-self 覆盖 align-items
-
 - grid 
-
 - text-transform: uppercase
 - calc()
+- position: sticky;吸顶
 
 ## practical skills
 
