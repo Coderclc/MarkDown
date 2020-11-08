@@ -7,6 +7,10 @@
 1. webpack.NamedModulesPlugin is not a constructor
 2. sideEffects:false 导致css无法被打包
 
+## Tips
+
+- bundle文件中 app user自定义, vendor,第三方模块, mainifest底层支撑 例如es6
+
 ## 安装
 
 ```

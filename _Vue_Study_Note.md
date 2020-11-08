@@ -31,3 +31,9 @@ UMD = AMD||CommonJS UMD为其糅合,优先判断支持AMD则使用
 Vue.prototype.$bus= new Vue() this.$bus.$emit("imgLoaded")this.$bus.$on("imgLoaded",()=>{console.log("我监听到了你的变化");})
 
  this.$bus.$off("imgLoaded",函数变量名)
+
+## 四、Router-Link
+
+\<router-link> 内部注册的组件  默认渲染为a标签  tag="button"  布尔属性 replace  不能返回
+
+被选中的router-link 会自动添加类名 router-link-active,,可以通过属性active-class="active"修改生成的类名 也可以通过创建router instance option linkActiveClass:"active "
