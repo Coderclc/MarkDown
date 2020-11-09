@@ -123,15 +123,7 @@ const config = require('./webpack.config.js')
 const compiler = webpack(config) 生成编译器
 ```
 
---inline 默认开启,浏览器刷新应用程序启用*内联模式(inline mode)*。一段处理实时重载的脚本被插入到你的包(bundle)中并且构建消息将会出现在浏览器控制台。
 
-```
-log.js?4244:23 [HMR] Waiting for update signal from WDS...
-```
-
-*荐使用模块热替换的内联模式，因为它包含来自 websocket 的 HMR 触发器。轮询模式可以作为替代方案，但需要一个额外的入口点：*`'webpack/hot/poll?1000` 
-
---process 将运行进度输送到控制台
 
 ## 模块热替换
 
