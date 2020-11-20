@@ -1,5 +1,17 @@
 # ADMIN
 
+## tips
+
+stage 线上环境的测试环境版
+
+```
+import AppMain from './AppMain'
+export { AppMain }
+export { default as AppMain } from './AppMain'
+```
+
+
+
 ## Details
 
 view和api file 对应
