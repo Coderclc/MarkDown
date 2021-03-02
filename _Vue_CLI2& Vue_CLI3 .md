@@ -1,4 +1,4 @@
-# Vue CLI2 & Vue CLI3
+# Vue CLI2 & Vue CLI3 
 
 ## CLI2
 
@@ -69,4 +69,16 @@
   ]
   ```
 
-- 
+- transformToRequire  默认情况下,vue-loader处理.vue文件时,所有的资源路径img src, background url 会作为模块依赖,需要动态require引入,也可以配置transformToRequire即不需要动态require引入
+
+- entry  webpack 查找开始构建 bundle 的地方
+
+- context  入口文件所处的目录的绝对路径的字符串
+
+- node {setImmediate } 防止Web包因为Vue而注入无用的setImmediate polyfill  source包含它（尽管只有在它是本机的情况下才使用它）。
+
+- copy-webpack-plugin 在webpack 中拷贝文件和文件夹
+
+- friendly-errors-webpack-plugin 友好的错误提示插件
+
+- portfinder 自动获取可用的端口

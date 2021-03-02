@@ -37,3 +37,24 @@ Vue.prototype.$bus= new Vue() this.$bus.$emit("imgLoaded")this.$bus.$on("imgLoad
 \<router-link> 内部注册的组件  默认渲染为a标签  tag="button"  布尔属性 replace  不能返回
 
 被选中的router-link 会自动添加类名 router-link-active,,可以通过属性active-class="active"修改生成的类名 也可以通过创建router instance option linkActiveClass:"active "
+
+## 五、组件内的嵌套sync
+
+子改变父必须update否则报错
+
+所以如果一个变量绑定了子和孙,孙改变子,没问题,但此时子的改变若是父传递又会因为上面的原因导致报错,必须转载
+
+```
+  watch: {
+    outerVisible(_) {
+      this.outer = _
+    },
+    outer(_) {
+      this.$emit('update:outerVisible', _)
+    }
+  }
+  outerVisible为父子之间的通信  outer 为 子孙之间的通信
+```
+
+
+
