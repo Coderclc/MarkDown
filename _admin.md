@@ -12,7 +12,7 @@ svg-icon 会成为主流方式
 
 "build:prod": "NODE_ENV=production node build/build.js", 
 
- "build:sit": "NODE_ENV=sit node build/build.js",
+ "build:sit": "NODE_ENV=sit node build/build.js",	
 
 在全局变量process.env中
 
@@ -27,6 +27,8 @@ var env = process.env.NODE_ENV === 'production' ? config.build.prodEnv : config.
 权限验证：通过token获取用户对应的 **role**，动态根据用户的 role 算出其对应有权限的路由，通过 **router.addRoutes** 动态挂载这些路由。使用vuex管理路由表，根据vuex中可访问的路由渲染侧边栏组件。
 
 一个是能否进入,一个是侧边渲染
+
+为什么不采取路由表由后端根据用户动态生成?前后端不分离,
 
 ### Cookie
 
@@ -177,3 +179,7 @@ app.url正则表达式匹配多个路径  res.json()返回json数据格式
 node.js 清楚require.cache 缓存 因为require的缓存机制,在第一次调用require时即缓存下来,无法hot更新require.cache是一个对象,键为文件路径
 
 require.resolve 查询某个文件的完整绝对路径
+
+## 按钮级别权限控制
+
+使用指令来实现少部分
