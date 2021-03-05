@@ -176,6 +176,7 @@
 - text-transform: uppercase
 - calc()
 - position: sticky;吸顶
+- over-flow auto 要想监听到滚动必须为auto
 
 ## practical skills
 

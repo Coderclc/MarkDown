@@ -134,11 +134,11 @@ svg-sprite 解决svg按需加载[svg-sprite-loader](https://github.com/kisenka/s
 
 自动导入  webpack 的require context
 
-svgo 将svg 冗余的信息剔除
+svgo 将svg 冗余的信息剔除,会导致多色icon无法使用
 
 ## Sortable
 
-
+或者[Vue.Draggable](https://github.com/SortableJS/Vue.Draggable)
 
 ## chokidar
 
@@ -195,3 +195,82 @@ require.resolve 查询某个文件的完整绝对路径
 ## 按钮级别权限控制
 
 使用指令来实现少部分
+
+## 侧边栏
+
+hack法 不断的改变url中的query
+
+## Dialog
+
+直接将值赋值给dialog 内外问题,
+
+```
+//赋值对象是一个obj
+this.objData=Object.assign({}, row) //这样就不会共用同一个对象
+
+//数组我们也有一个巧妙的防范
+newArray = oldArray.slice(); //slice会clone返回一个新数组
+赋值以后重新指向新的引用
+```
+
+## Tabs
+
+可用  <keep-alive> 缓冲 el-tabs挂载
+
+## Select 
+
+[vue-multiselect](https://github.com/monterail/vue-multiselect) 解决bind  obj  回显问题
+
+## 富文本
+
+tinymce  ckeditor
+
+## Markdown
+
+[simplemde-markdown-editor](https://github.com/sparksuite/simplemde-markdown-editor) 
+
+转换库[showdown](https://github.com/showdownjs/showdown)
+
+## 导出excel
+
+csv比xlsx简单的多
+
+创建一个a标签，写上`data:text/csv;charset=utf-8`头，再把数据塞进去，`encodeURI(csvContent)`一下就好了， [stackoverflow回答](https://stackoverflow.com/questions/14964035/how-to-export-javascript-array-info-to-csv-on-client-side)。
+
+转xlsx使用[js-xlsx](https://github.com/SheetJS/js-xlsx)，
+
+## echart
+
+[gallery](http://gallery.echartsjs.com/explore.html)
+
+## Postcss
+
+ autoprefixer 只会对通过 vue-loader 引入的样式有作用，换而言之也就是 .vue 文件里面的 css autoprefixer 才会效果
+
+解决方法
+
+```
+//app.vue
+<style lang="scss">
+  @import './styles/index.scss'; // 全局自定义的css样式
+</style>
+```
+
+修改配置修改postcss.config.js即可 ,配置与 [postcss](https://www.postcss.com.cn/)相同
+
+​    *// to edit target browsers: use "browserlist" field in package.json* 编辑目标浏览器
+
+```
+"browserslist": [
+    "> 1%",兼容全球使用率大于1%的游览器
+    "last 2 versions",
+    "not ie <= 8"
+  ]
+```
+
+
+
+## Tips
+
+大部分问题都可以通过key和vue.nextTick 解决
+
