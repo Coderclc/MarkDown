@@ -9,10 +9,32 @@
 - \#ifdef：if defined 仅在某平台存在
 - \#ifndef：if not defined 除了某平台均存在
 
-4.  ulist urequest   
+4. ulist urequest   
+
 5. uaviga 
+
 6. 指令 @tap  綁定數據 data-  在e.currentTarget.dataset中,連接url中  採用?=形式
+
 7. 在詳細頁面的onLoad中直接獲取
+
 8. \<rich-text :nodes="obj.content" /> 或者 v-html 展示html格式
+
 9. uni.showLoading({title:''}) uni.hideLoading()
+
 10. 配置啟動項confition 
+
+11. 腳手架搭建项目 
+
+    1.  vue create -p dcloudio/uni-preset-vue my-project
+    2.  npm run dev:mp-weixin
+
+12.  使用 vw,vh rpx
+
+13.  内置sass  安装即可
+
+14.  基本语法
+
+     1.  数据展示 mustache语法
+     2.  
+
+     
