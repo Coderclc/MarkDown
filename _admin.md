@@ -268,7 +268,185 @@ csv比xlsx简单的多
   ]
 ```
 
+## Vue Cli3
 
+vue inspect > output.js  默認生成的是開發環境的配置
+
+vue inspect --mode production > output.js
+
+## redirect 
+
+在不刷新页面的情况下reload page
+
+/redirect路由 重定向
+
+## addRoutes && removeRoutes
+
+官方api addroutes  但没有remove 否则会重复挂载  只能通过函数返回router重置reset 
+
+reset 的是初始router中的matcher
+
+## Mock 数据
+
+拦截了所有的请求并代理到本地，然后进行数据模拟，所以 `network` 中没有发出任何的请求。但它的最大的问题是就是它的实现机制。它会重写浏览器的`XMLHttpRequest`对象，从而才能拦截所有请求，代理到本地。大部分情况下用起来还是蛮方便的，但就因为它重写了`XMLHttpRequest`对象，所以比如`progress`方法，或者一些底层依赖`XMLHttpRequest`的库都会和它发生不兼容
+
+## async/await or promise
+
+```
+getInfo()
+  .then(res => {
+    //do somethings
+  })
+  .catch(err => {
+    //do somethings
+  })
+  
+ try {
+  const res = await getInfo()
+  //do somethings
+} catch (error) {
+  //do somethings
+}
+```
+
+try catch 使await 得不偿失  单个使用then
+
+await Promise.all
+
+```
+const foo = () => {
+    return new Promise(resolve => {
+        setTimeout(() => {
+            resolve()
+        }, 2000);
+    });
+}
+async function bar() {
+    await foo().then(res => {})
+}
+
+Promise.all([bar(), bar()]).then(res => {
+})
+Promise.all([foo(), foo()]).then(res => {
+})
+```
+
+then()的返回值就是promise所以then().then()
+
+Promise.all()捕获
+
+1.  return  new  Promise  resolve()
+2.  getUserinfo().then()的返回值就是promise   所以直接 return  getUserinfo().then then 会自动return  ''
+3.  async    await   getUserinfo().then() 等待执行完毕  ,async  函数会自动返回一个空的promise
+
+```
+const foo = () => {
+	return new Promise(resolve => {
+		setTimeout(() => {
+			resolve('')
+		}, 2000);
+	});
+}
+1.
+ function bar() {
+	return new Promise(resolve => {
+		foo().then(res => {
+			resolve()
+		})
+	});
+}
+2.
+ async function bar() {
+		await foo().then(res => {
+		})
+}
+3.
+function bar() {
+	return foo().then(res => {})
+}
+
+
+Promise.all([bar(), bar()])
+	.then(res => {
+		console.log(res);
+	})
+```
+
+## 命名规范
+
+- 所有的`Component`文件都是以大写开头 (PascalCase)，
+- 所有的`.js`文件都遵循横线连接 (kebab-case)。
+- 在`views`文件下，代表路由的`.vue`文件都使用横线连接 (kebab-case),代表路由的文件夹也是使用同样的规则。
+
+## Cdn
+
+https://juejin.cn/post/6844903840626507784
+
+## watch
+
+immediate 初始化加载  deep  深度监听
+
+深度监听表单变化
+
+## $attrs 和$listeners
+
+attrs 为未经过prop绑定的属性\
+
+## computed
+
+ created(){return form.created}
+
+使用get 和set  ,表单组件直接绑定 created 改变时间戳
+
+还有如果input绑定的值时vuex直接修改会报警告,建议使用set  commit改变
+
+## Object.freeze
+
+this.item = Object.freeze(Object.assign({}, this.item)) 将data的值对象冻结,减少开销
+
+当你把一个普通的 JavaScript 对象传给 Vue 实例的 data 选项，Vue 将遍历此对象所有的属性，并使用 `Object.defineProperty` 把这些属性全部转为 `getter/setter`，它们让 Vue 能进行追踪依赖，在属性被访问和修改时通知变化。 使用了 `Object.freeze` 之后，不仅可以减少 `observer` 的开销，还能减少不少内存开销。相关 [issue](https://github.com/vuejs/vue/issues/4384)。
+
+## Functional
+
+ 函数式组件,比如能用`v-show`的地方就不要用`v-if`，善用`keep-alive`和`v-once`，`Object.freeze()`处理 [vue big data](https://github.com/vuejs/vue/issues/4384) 问题等
+
+## 性能优化技巧
+
+[vue-9-perf-secrets](https://slides.com/akryum/vueconfus-2019#/)
+
+## 减少全局操作
+
+避免使用document全局选择器,使用this.$el 组件根节点 this.$ref.xxx.$el
+
+全局性事件window.addEventListener一定要销毁
+
+Vuex避免太多,如果不可避免可以采用动态注册,动态销毁
+
+## event bus
+
+关系尴尬组件this.$bus.$on  this.$bus.$emit  this.$bus.$off(  在on處off
+
+## Sass 和 Js 之间变量共享
+
+js 将变量传给sass  写内联  ,或者var 变量
+
+sass 传给js :**export** {  theme: $theme; }
+
+## 自动注册全局组件
+
+当然你也不要为了省事，啥组件都往全局注册，这样会让你初始化页面的时候你的初始`init bundle`很大。你应该就注册那些你经常使用且体积不大的组件。那些体积大的组件，如编辑器或者图表组件还是按需加载比较合理。
+
+## hook
+
+替代destroyed  api：`$on('hook:xxx')`
+
+@hook:mounted='doSomething' 监听子组件的生命周期
+
+## Vue SSR
+
+## SVG 
+
+svg-sprite-loader 和url-loader衝突問題 使用 webpack 的 [exclude](https://webpack.js.org/configuration/module/#rule-exclude) 和 [include](https://webpack.js.org/configuration/module/#rule-include) 
 
 ## Tips
 
