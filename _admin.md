@@ -412,7 +412,82 @@ this.item = Object.freeze(Object.assign({}, this.item)) 将data的值对象冻�
 
 ## 性能优化技巧
 
-[vue-9-perf-secrets](https://slides.com/akryum/vueconfus-2019#/)
+ JS 引擎是单线程的运行机制，JS 线程会阻塞 UI 线程，所以当脚本执行时间过长，就会阻塞渲染，导致页面卡顿。 `script` 执行时间短，所以它的性能更好。
+
+[vue-9-perf-secrets  ](https://slides.com/akryum/vueconfus-2019#/)  [掘金](https://juejin.cn/post/6922641008106668045#heading-2)
+
+1. Function components 
+
+   大量复用的没有响应式数据的子组件采用 函数式组件函数式组件和普通的对象类型的组件不同，它不会被看作成一个真正的组件，我们知道在 `patch` 过程中，如果遇到一个节点是组件 `vnode`，会递归执行子组件的初始化过程；而函数式组件的 `render` 生成的是普通的 `vnode`，不会有递归子组件的过程，因此渲染开销会低很多.因此，函数式组件也不会有状态，不会有响应式数据，生命周期钩子函数这些东西。你可以把它当成把普通组件模板中的一部分 DOM 剥离出来，通过函数的方式渲染出来，是一种在 DOM 层面的复用
+
+2. child component splitting
+
+   把这个耗时任务 `heavy` 函数的执行逻辑用子组件 `ChildComp` 封装了，由于 Vue 的更新是组件粒度的，虽然每一帧都通过数据修改导致了父组件的重新渲染，但是 `ChildComp` 却不会重新渲染，因为它的内部也没有任何响应式数据的变化。所以优化后的组件不会在每次渲染都执行耗时任务，自然执行的 JavaScript 时间就变少了。 减少了重新渲染的组件
+
+3. local variables
+
+   大量重复操作this的时候,先缓存为局部,computed 默认传了this进来
+
+4. reuse dom with v-show 
+
+    使用 v-show代替v-if
+
+5. keep-alive 
+
+   空间换时间,占用内存缓存
+
+6. deferred features 
+
+   使用了 `Defer` 这个 `mixin`分批渲染
+
+7. time slicing  
+
+   当script执行时间过长的时候会有卡死的可能
+
+8. non-reactive data
+
+   ```
+   const data = items.map(
+     item => ({
+       id: uid++,
+       data: item,
+       vote: 0
+     })
+   )
+   object  key为响应式,增加了开销,当数据量大时延迟script 开销
+   ```
+
+   ```
+   const data = items.map(
+     item => optimizeItem(item)
+   )
+   
+   function optimizeItem (item) {
+     const itemData = {
+       id: uid++,
+       vote: 0
+     }
+     Object.defineProperty(itemData, 'data', {
+       // Mark as non-reactive
+       configurable: false,
+       value: item
+     })
+     return itemData
+   }
+   
+   ```
+
+   类似的想要在上下文中共一个数据,并不一定要绑定在data上
+
+9. virtual scrolling
+
+之所以有这个差异，是因为虚拟滚动的实现方式，是只渲染视口内的 DOM，这样总共渲染的 DOM 数量就很少了，自然性能就会好很多。
+
+虚拟滚动组件也是 [Guillaume Chau](https://github.com/Akryum) 写的，感兴趣的同学可以去研究它的[源码实现](https://github.com/Akryum/vue-virtual-scroller)。它的基本原理就是监听滚动事件，动态更新需要显示的 DOM 元素，计算出它们在视图中的位移。
+
+虚拟滚动组件也并非没有成本，因为它需要在滚动的过程中实时去计算，所以会有一定的 `script` 执行的成本。因此如果列表的数据量不是很大的情况，我们使用普通的滚动就足够了。
+
+
 
 ## 减少全局操作
 
@@ -448,7 +523,52 @@ sass 传给js :**export** {  theme: $theme; }
 
 svg-sprite-loader 和url-loader衝突問題 使用 webpack 的 [exclude](https://webpack.js.org/configuration/module/#rule-exclude) 和 [include](https://webpack.js.org/configuration/module/#rule-include) 
 
+## 动态路由配置
+
+```
+const map={
+ login:require('login/index').default // 同步的方式
+ login:()=>import('login/index')      // 异步的方式
+}
+//你存在服务端的map类似于
+const serviceMap=[
+ { path: '/login', component: 'login', hidden: true }
+]
+//之后遍历这个map，动态生成asyncRouterMap
+并将 component 替换为map[component]
+```
+
+##  Git Hooks
+
+
+
 ## Tips
 
 大部分问题都可以通过key和vue.nextTick 解决
+
+## .sync
+
+emit 渲染层立即刷新,逻辑层必须等待下一次刷新才发生改变
+
+this.$nextTick 注意包裹范围
+
+[...数组的深拷贝]
+
+deepCopy 对象的深拷贝
+
+this.$forceUpdate 执行update
+
+缓存cpn data,并将其指向拷贝给this.$bus去改变
+
+$bus的改变无法实时渲染
+
+## Sort
+
+arr.sort(x,y)  函数返回值  正数和0为不调换位置  负数为掉换位置   
+
+x为后,y为前  x-y即 后大于前,升序,反之为降序
+
+例如[1,2,3,4]  x为 2 3 4 y为 1 2 3 两两比较执行三次
+
+若[1,2,4,3]  则比较完变化的直接比较前面比较过大小的
 

@@ -32,9 +32,27 @@
 
 13.  内置sass  安装即可
 
-14.  基本语法
+14. 基本语法  同vue
 
-     1.  数据展示 mustache语法
-     2.  
+15. :data-???="???" $event 通过e.currentTarget.dataset获取 同weixin
 
-     
+16. 基本el  view  image
+
+17. 全局共享数据 
+
+    1. vue.prototype.baseURL='' 事件总线
+    2. getApp().globalDate.text = 'test'  在App.vue globalData:{baseUrl:''} 
+
+18. life cycle   
+
+    1. onLoad() > mounted()
+
+    
+
+    
+
+    
+
+    
+
+    
