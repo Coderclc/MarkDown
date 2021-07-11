@@ -94,12 +94,13 @@
       
     const attrs = {
       type: 'email',
-      placeholder: 'Enter your email'
+      placeholder: 'Enter your email',
+        [this.title]: 'Enter your email' // 自定义b
     }
      return <input {...{ attrs}} />
   }
   ```
-
+  
   
 
 三、Slots
@@ -182,7 +183,8 @@ native修饰符
 <input nativeOnIconClick={this.onClick} />
 传参
 <input on-click={this.onClick.bind(this,argument)} />
-
+自定义事件名
+on={{[this.event]:this.onClick}}
 ```
 
 - v-html:
@@ -251,6 +253,10 @@ v-show={true}
          return (
            <div
              on={{
+             .capture 在冒泡排序中先捕获
+             默认有里向外冒泡 有.captrue 优先 全部都有.captrue 向下冒泡
+         1. 冒泡是从里往外冒，捕获是从外往里捕。
+         1. 当捕获存在时，先从外到里的捕获，剩下的从里到外的冒泡输出。
                // 相当于 :click.capture
                '!click': this.$_handleClick,
                // 相当于 :input.once
@@ -264,5 +270,5 @@ v-show={true}
          )
        }
     ```
-
+    
     
