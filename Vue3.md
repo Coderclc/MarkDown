@@ -184,16 +184,15 @@ const vm = app.mount('#app')
   tips  使用计算属性重构 `<custom-input>` 组件
 
   ```js
-   get() {
+      get() {
           return this.modelValue
-        },
+      },
+      set(value) { 
+          this.$emit('update:modelValue', value)
+      }
   ```
 
-```js
-	set(value) { 
-        this.$emit('update:modelValue', value)
-      }
-```
+
 
 - 动态组件
 
@@ -230,3 +229,51 @@ v-is 值应为 JavaScript 字符串文本：
     - 字符串模板 (例如：`template: '...'`)
     - [单文件组件](https://vue3js.cn/docs/zh/guide/single-file-component.html)
     - `<script type="text/x-template">`
+
+- 烈推荐遵循 [W3C 规范](https://html.spec.whatwg.org/multipage/custom-elements.html#valid-custom-element-name)中的自定义组件名 (字母全小写且必须包含一个连字符)
+
+- Prop 提示
+
+  注意在 JavaScript 中对象和数组是通过引用传入的，所以对于一个数组或对象类型的 prop 来说，在子组件中改变变更这个对象或数组本身**将会**影响到父组件的状态
+
+  -  传的是对象或数组内存地址, ,1. 直接修改不会报错  2. 传moment这种对象类型会导致子组件修改父组件
+
+- ```js
+  // 基础的类型检查 (`null` 和 `undefined` 会通过任何类型验证)
+  印象之中会报null错误?
+  ```
+
+- ```js
+  // 自定义验证函数
+  propF: {
+    validator: function(value) {
+      // 这个值必须匹配下列字符串中的一个
+      return ['success', 'warning', 'danger'].indexOf(value) !== -1
+    }
+  },
+  // 具有默认值的函数
+  propG: {
+    type: Function,
+    // 与对象或数组默认值不同，这不是一个工厂函数 —— 这是一个用作默认值的函数
+    default: function() {
+      return 'Default function'
+    }
+  }
+  ```
+
+- prop 和 event 将会继承与根节点
+  - 2.x  无法继承event  需要@click.native  或者子组件 on={this.$listeners}
+  - 3.x  移除 直接继承
+
+- 禁用 inheritAttrs: false
+
+  - 禁用 attribute 继承的常见情况是需要将 attribute 应用于根节点之外的其他元素
+  - 也就是防止prop 或者$attr 对根组件的影响
+
+  - 通过将 `inheritAttrs` 选项设置为 `false`，你可以访问组件的 `$attrs` property，该 property 包括组件 `props` 和 `emits` property 中未包含的所有属性 (例如，`class`、`style`、`v-on` 监听器等)。
+
+  - 将$listeners 移到了$attrs  ,使用 v-bind="$attrs" 也要把 inheritAttrs: false,带上
+
+- 多个根节点, 现在可以是多个根节点了
+  - 不具有自动 attribute 回退行为。如果未显式绑定 `$attrs`，将发出运行时警告。
+- 在dom模板中@myEvent 无法接受到 emit('myEvent') 需为@my-event
