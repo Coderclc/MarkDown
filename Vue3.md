@@ -483,13 +483,13 @@ v-is 值应为 JavaScript 字符串文本：
   - 据对象在内部会进行递归合并，并在发生冲突时以组件数据优先。
   - 同名钩子函数将合并为一个数组，因此都将被调用。另外，混入对象的钩子将在组件自身钩子**之前**调用
 
-  - 自定义选项合并策略
+  - 自定义选项合并策略(改变合并策略,没必要没必要)
   - 在vue2中mixins有几个问题第一,mixin很容易发生冲突第二,可重用性是有限的,我们不能向mixin传递任何参数来改变他的逻辑 ->组合式api
 
 - directive
 
   - 包含以下几个钩子函数beforeMount,mounted,beforeUpdate,updated,beforeUnmount,unmounted
-  - 你可能想在 `mounted` 和 `updated` 时触发相同行为，而不关心其它的钩子。比如这样写：指令名后面直接加函数
+  - 你可能想在 `mounted` 和 `updated` 时触发相同行为，而不关心其它的钩子。比如这样写：指令名后面直接加函数(不用拆开写两个相同的,写一个即可)
 
 - teleport
 
@@ -515,7 +515,7 @@ v-is 值应为 JavaScript 字符串文本：
 
   - Vue 通过建立一个**虚拟 DOM** 来追踪自己要如何改变真实 DOM。 return Vue.h('h1', {}, this.blogTitle)
 
-  - 可选的第二个参数{Object} props却报错了
+  - 可选的第二个参数{Object} props却报错了(大部分都写null)
 
   - VNODE 必须唯一,所以 重复的时候需要用工厂函数来进行渲染
 
@@ -540,4 +540,42 @@ v-is 值应为 JavaScript 字符串文本：
       }
     ```
 
-    
+
+- vue2.2 实现自定义插件
+
+  ```
+  const toast = Vue.extend(Toast) 得到组件构造器 
+  Vue.component('toast',toast)
+  语法糖  Vue.component('toast',Toast) 直接置组件选项对象,平时我的局部注册就是组件祖册的语法糖
+  ```
+  
+  ```
+  import Toast from './index.vue'  // 组件选项对象
+  const zoe = {} 
+  let toast
+  zoe.install = Vue => {
+    const ToastConstructor = Vue.extend(Toast) // 得到组件构造器类
+    toast = new ToastConstructor() 得到vue 的实例
+    toast.$mount(document.createElement('div')) 该方法在Vue的原型上,根组件app也是如此挂载,此时还没有$el,必须挂载在一个el上才有,才能挂在dom上
+    document.body.appendChild(toast.$el) 直接
+    Vue.prototype.$toast = toast
+  }
+  export default zoe
+  export {
+    toast
+  }
+  Vue.use zoe 这个对象会执行对象的install 方法
+  ```
+  
+- vue3.0 plugin
+
+
+  - 插件是自包含的代码，通常向 Vue 添加全局级功能。它可以是公开 `install()` 方法的 `object`，也可以是 `function`
+    1. 添加全局方法或者 property。如：[vue-custom-element](https://github.com/karol-f/vue-custom-element)
+    2. 添加全局资源：指令/过滤器/过渡等。如：[vue-touch](https://github.com/vuejs/vue-touch)）
+    3. 通过全局 mixin 来添加一些组件选项。(如[vue-router](https://github.com/vuejs/vue-router))
+    4. 添加全局实例方法，通过把它们添加到 `config.globalProperties` 上实现。
+    5. 一个库，提供自己的 API，同时提供上面提到的一个或多个功能。如 [vue-router](https://github.com/vuejs/vue-router)
+
+  - 每当这个插件被添加到应用程序中时，如果它是一个对象，就会调用 `install` 方法。如果它是一个 `function`，则函数本身将被调用。在这两种情况下——它都会收到两个参数：由 Vue 的 `createApp` 生成的 `app` 对象和用户传入的选项
+  - 注意(vue2.2为第一个参数为Vue构造器) 可以为函数 不用起对象名字了
