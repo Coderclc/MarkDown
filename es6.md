@@ -6,7 +6,6 @@ Person.prototype = clc.__proto__
 clc= {name:'chenlicheng',age:18}
 Object.keys(clc) = [name,age] instance of Array
 2.obj.hasOwnProperty('key')  return boolean
-
 新增Object接口
 对象 构造器 说明
 Object getPrototypeOf 返回对象的原型
@@ -418,6 +417,8 @@ find((item = >item>2)   返回第一个符合条件的
 findIndex() 返回第一个符合条件的index
 
 函数,类都有一个name属性,即类名,函数名
+
+## Proxy
 
 
 

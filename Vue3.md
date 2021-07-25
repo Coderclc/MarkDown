@@ -1,5 +1,13 @@
 # Vue3
 
+$methods 为 提供的方法 _为非提供
+
+object.defineproperty() 在浏览器的颜色会淡一点,是不可枚举的
+
+如果为(...) invoke property getter 即为设置了代理
+
+vue 将_data的方法数据代理到vm上,将method的方法clone到vm上
+
 ## Change
 
 1. monorepo 管理 
@@ -403,7 +411,7 @@ v-is 值应为 JavaScript 字符串文本：
 
 - $forceUpdate :迫使组件实例重新渲染。注意它仅仅影响实例本身和插入插槽内容的子组件，而不是所有子组件。其实是强制执行生命周期中的update
 
-- v-once 用用于大量的静态html文本
+- v-once 用于大量的静态html文本
 
 -  [CSS Triggers](https://csstriggers.com/) 来查看哪些属性会在动画时触发重绘,也就是说有一些属性是需要浏览器重新布局并且重绘,而避免重绘可以在 web 上创建极其流畅的动画
 
@@ -577,5 +585,209 @@ v-is 值应为 JavaScript 字符串文本：
     4. 添加全局实例方法，通过把它们添加到 `config.globalProperties` 上实现。
     5. 一个库，提供自己的 API，同时提供上面提到的一个或多个功能。如 [vue-router](https://github.com/vuejs/vue-router)
 
-  - 每当这个插件被添加到应用程序中时，如果它是一个对象，就会调用 `install` 方法。如果它是一个 `function`，则函数本身将被调用。在这两种情况下——它都会收到两个参数：由 Vue 的 `createApp` 生成的 `app` 对象和用户传入的选项
+  - 每当这个插件被添加到应用程序中时，如果它是一个对象，就会调用 `install` 方法。如果它是一个 `function`，则函数本身将被调用。在这两种情况下——它都会收到两个参数：由 Vue 的 `createApp` 生成的 `app` 对象和用户传入的选项(不是Vue 而是vue的实例,对象为) app.use的第二个选项
+
   - 注意(vue2.2为第一个参数为Vue构造器) 可以为函数 不用起对象名字了
+
+  - vue2.2 为Vue.use  vue3.0为app.use
+
+- 把函数添加到 app.config.globalProperties 上变成全局方法
+
+- ```js
+    app.provide('i18n', options) 子组件通过inject 'i18n'
+  还有app.mixin  app.directive
+  ```
+
+- ```
+  export default app => {
+      const toast = createApp(Toast)
+  
+      const el = document.createElement('div')
+      document.body.appendChild(el)
+  
+      toast.mount(el)
+  
+      app.provide('toast', toast)
+      app.config.globalProperties.$toast = toast
+  
+  }
+  ```
+  
+- 深入响应式原理
+
+
+    - Vue 会使用带有 getter 和 setter 的处理程序遍历其所有 property 并将其转换为 [Proxy](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Proxy)。这是 ES6 仅有的特性，使用了 `Object.defineProperty` 来支持 IE 浏览器。两者具有相同的 Surface API，但是 Proxy 版本更精简，提升了性能。
+
+- reflect 与 proxy
+
+
+    - proxy: 通过get和set对对象代理操作,可在过程中添加一些额外的操作
+    - reflect 可以用于获取目标对象的行为，它与 Object 类似，但是更易读，为操作对象提供了一种更优雅的方式。它的方法与 Proxy 是对应的。
+    - 通过构造函数新建实例时其实是对目标对象进行了浅拷贝，因此目标对象与代理对象会互相 // 影响,也就是proxy.name = '' 会影响target
+    - // handler 对象也可以为空，相当于不设置拦截操作，直接访问目标对象 就没啥区别了和obj
+    -  get(target, propKey, receiver) target 和propKey 指向同一个对象
+    - set:(target, propKey, value, receiver) 
+    
+    - (new class 出来的对象.\___proto\___ 指向class 的prototype, 而正常的obj为Object: null prototype空原型,通过)`Object.create()`方法创建一个新对象，使用现有的对象来提供新创建的对象的__proto__。.(tm的意思就是新对象的原型指向旧对象,新对象的基本数据类型拷贝了一份,引用数据类型没有拷贝,所以使用拷贝对象方法实际是使用继承的也是原型上的方法)
+    
+    - ```
+      let proxy = new Proxy({}, {
+        get(target, propKey, receiver) {
+            // 实现私有属性读取保护
+            if(propKey[0] === '_'){
+                throw new Erro(`Invalid attempt to get private     "${propKey}"`);
+            }
+            console.log('Getting ' + propKey);
+            return target[propKey];
+        }
+      });
+       
+      let obj = Object.create(proxy);
+      obj.name
+      // Getting name  get 也是可继承的
+      ```
+    
+    - ```
+      Object.setPrototypeOf(obj, prototype) 吧prototype设置到obj的__proto__
+      ```
+    
+    - ```
+      const obj = {
+        log: ['a', 'b', 'c'],
+        get latest() {
+          if (this.log.length === 0) {
+            return undefined;
+          }
+          return this.log[this.log.length - 1];
+        }
+      };
+      
+      console.log(obj.latest);
+      对象的get 方法 如果没有get  需要执行 obj.latest()
+      ```
+    
+    - ```
+      const language = {
+        set current(name) {
+          this.log.push(name);
+        },
+        log: []
+      }
+      
+      language.current = 'EN';
+      console.log(language.log); // ['EN']
+      
+      language.current = 'FA';
+      console.log(language.log); // ['EN', 'FA']
+      对象的set 方法
+      ```
+    
+      ```js
+      Reflect.get(...arguments) Reflect.get(target, name, receiver) 当target中有get 方法也就是上述的对象的get方式时,this会指向receiver Reflect.set(...arguments)同理
+      ```
+
+- Vue 在get 方法执行了   effect track(target, prop)  在set 方法执行 trigger(target, key)
+- Vue 如何处理这些更改的答案
+  - ~~当某个值发生变化时进行检测~~：我们不再需要这样做，因为 Proxy 允许我们拦截它
+  - **跟踪更改它的函数**：我们在 Proxy 中的 getter 中执行此操作，称为 `effect`
+  - **触发函数以便它可以更新最终值**：我们在 Proxy 中的 setter 中进行该操作，名为 `trigger`
+
+- Vue 在内部跟踪所有已被设置为响应式的对象，因此它始终会返回同一个对象的 Proxy 版本。所有的data等的对象都会被proxy代理
+
+- ```
+     const foo = {}
+     const bar = foo
+     console.log(foo===bar); true
+     但是proxy带来一个问题即target === proxy  false 虽然行为相同,即修改proxy 会修改target 但是赖严格比对是失败的 比如filter和map 他们的返回 truthy 必须为===
+  ```
+
+- 每个组件实例都有一个相应的侦听器实例，该实例将在组件渲染期间把“触碰”的所有 property 记录为依赖项。之后，当触发依赖项的 setter 时，它会通知侦听器，从而使得组件重新渲染。首次渲染后，组件将跟踪一组依赖列表——即在渲染过程中被访问的 property。反过来，组件就成为了其每个 property 的订阅者。当 Proxy 拦截到 set 操作时，该 property 将通知其所有订阅的组件重新渲染。
+
+- 每一个组件都有一个侦听器,实例将在组件渲染期间把“触碰”的所有 property 记录为依赖项。多对多的关系,反过来侦听器为pro的订阅者,当proxy拦截到了prop的trigger操作的时候, prop会通知所有的订阅者重新渲染
+
+- 响应式基础
+
+  - reactive  响应式对象
+
+  - ref 响应式值 
+
+  - 当 `ref` 作为响应式对象的 property 被访问或更改时自动展开为value
+
+    ```
+    ref =  0  state{ref}
+    state.ref = 1  并不是修改state.ref 而是修改state.ref.value
+    ref = 1
+    
+    ref = 0  state[ref]
+    state[0] = 1   / /Array  或者map不会展开
+    ref = 0
+    ```
+
+  - toRefs 直接解构的两个 property 的响应性都会丢失。对于这种情况，我们需要将我们的响应式对象转换为一组 ref。这些 ref 将保留与源对象的响应式关联：
+
+    ```
+    let { author, title } = toRefs(book)
+    
+    title.value = 'Vue 3 Detailed Guide' // 我们需要使用 .value 作为标题，现在是 ref
+    console.log(book.title) // 'Vue 3 Detailed Guide'
+    ```
+
+  - readonly
+
+    ```
+    import { reactive, readonly } from 'vue'
+    const original = reactive({ count: 0 })
+    const copy = readonly(original)
+    // 在copy上转换original 会触发侦听器依赖
+    original.count++
+    // 转换copy 将导失败并导致警告
+    copy.count++ // 警告: "Set operation on key 'count' failed: target is readonly."
+    ```
+
+- 响应式计算和侦听
+
+  - computed
+
+  - ```
+    const count = ref(1)
+    const plusOne = computed(() => count.value++)
+    console.log(plusOne.value) // 2
+    
+    plusOne.value++ // error  只有get 无法操作
+    ```
+
+    ```
+    const count = ref(1)
+    const plusOne = computed({
+      get: () => count.value + 1,
+      set: val => {
+        count.value = val - 1
+      }
+    })
+    
+    plusOne.value = 1
+    console.log(count.value) // 0
+    ```
+
+  - watchEffect
+
+    ```
+    const count = ref(0)
+    watchEffect(() => console.log(count.value))
+    // -> logs 0
+    setTimeout(() => {
+      count.value++
+      // -> logs 1
+    }, 100)
+    ```
+
+    ```
+    侦听器会被链接到该组件的生命周期，并在组件卸载时自动停止。 會自動停止,也可以手動t
+    const stop = watchEffect(() => {
+      /* ... */
+    })
+    // later
+    stop()
+    ```
+
+    
