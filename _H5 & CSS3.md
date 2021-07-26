@@ -202,3 +202,9 @@ div{
 }
 ```
 
+- caret-color 修改光标颜色
+- -webkit-tap-highlight-color ios iphone 点击颜色
+- css的锚点定位 scroll-behavior:smooth平滑滚动
+- overflow-anchor 新内容载入时scroll位置
+- scroll-snap 一次只滑一个元素
+- touch-action:manipulation
