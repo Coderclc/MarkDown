@@ -1,14 +1,36 @@
 # Vue3
 
-$methods 为 提供的方法 _为非提供
+1. $methods 为 提供的方法 _为非提供
 
-object.defineproperty() 在浏览器的颜色会淡一点,是不可枚举的
+2. object.defineproperty() 在浏览器的颜色会淡一点,是不可枚举的
 
-如果为(...) invoke property getter 即为设置了代理
+3. 如果为(...) invoke property getter 即为设置了代理
 
-vue 将_data的方法数据代理到vm上,将method的方法clone到vm上
+4. vue 将_data的方法数据代理到vm上,将method的方法clone到vm上'
 
-## Change
+5. passive 用于移动端操作先执行默认行为 ' ,并不是所有的行为,少部分
+
+6. 获取e.key,e.keyCode  将key(name) 转为.kebab-case
+
+7. tab 在keyup的时候已经切走了光标,无法捕获,需要使用keydown
+
+8. 系统修饰键 .ctrl .alt .shift .meta keyup必须要修饰其他案件,且在释放其他按键后触发,keydown直接触发
+
+9. Vue.config.keyCodes  自定义keycodes
+
+10. 如果页面没有发生改变,即使数据改变vuedevtools视图不会刷新
+
+11. template 只会找vm上的,和原型不会去找全局作用域 但在js上可以把window放在data身上,
+
+12. v-for (item,index) 可以不写括号,不过这是一个好习惯
+
+13. for in  for of 相同  可便利数字,对象,数组
+
+14. 旧虚拟dom和新虚拟dom之间进行diff算法对比,key相同的之间比较,相同保留,不相同重绘,input输入框的值是在 real dom上的 ,因为用index比较,又打乱了顺序,所以会出错,默认的使用“就地更新”的策略。不会移动dom 的顺序,而是就地更新,即为能复用就复用. 或者是刻意依赖默认行为以获取性能上的提升(有时候默认行为性能反而更好)。
+
+    > `key` 的特殊 attribute 主要用在 Vue 的虚拟 DOM 算法，在新旧 nodes 对比时辨识 VNodes。如果不使用 key，Vue 会使用一种最大限度减少动态元素并且尽可能的尝试就地修改/复用相同类型元素的算法。而使用 key 时，它会基于 key 的变化重新排列元素顺序，并且会移除/销毁 key 不存在的元素。
+
+##  Change
 
 1. monorepo 管理 
    - mono 单个,repo repository仓库
@@ -18,7 +40,7 @@ vue 将_data的方法数据代理到vm上,将method的方法clone到vm上
    - Vue2.x使用的Object.defineProperty来劫持obj的getter和setter,缺陷是设置和删除无法劫持,所以用相应的hack方法api$delete,$set,
 3. 删除了一些不必要的api
    - 删除了$on,$off,$once,
-   - 移除了filter,内联模板(在父组件中声明的数据和子组件中声明的数据两个都可以渲染,这反而是缺点)等
+   - 移除了filter,内联模板inline-template(在父组件中声明的数据和子组件中声明的数据两个都可以渲染,这反而是缺点)等
 4. 编译方面的优化
    - 生成block tree ,slot编译优化,diff算法优化
 5. 由Options API到Composition Api
@@ -32,36 +54,13 @@ vue 将_data的方法数据代理到vm上,将method的方法clone到vm上
 
 # Vue3
 
-```
-<div id="app">
-  {{ message }}
-</div>
+vue 2.2
 
-var app = new Vue({
-  el: '#app',
-  data: {
-    message: 'Hello Vue!'
-  }
-})
-```
+new Vue({}).$mount('#app')
 
-- 非.vue除了挂载方式 不同其余相同
+vue.3
 
-```
-<div id="counter">
-  Counter: {{ counter }}
-</div>
-
-const Counter = {
-  data() {
-    return {
-      counter: 0
-    }
-  }
-}
-
-Vue.createApp(Counter).mount('#counter')
-```
+Vue.createApp({}).mount('#app')
 
 - 应用实例暴露的大多数方法都会返回该同一实例，允许链式：
 
@@ -100,10 +99,6 @@ const vm = app.mount('#app')
   ```
 
   > 在遍历对象时，会按 `Object.keys()` 的结果遍历，但不能保证在不同 JavaScript 引擎下的结果都一致。
-
-- `v-for` 渲染的元素列表时，它默认使用“就地更新”的策略。不会移动dom 的顺序,而是就地更新,提供key attr即可.建议尽可能在使用 `v-for` 时提供 `key` attribute，除非遍历输出的 DOM 内容非常简单，或者是刻意依赖默认行为以获取性能上的提升。意思是提供了key反而会降低性能?
-
-  > `key` 的特殊 attribute 主要用在 Vue 的虚拟 DOM 算法，在新旧 nodes 对比时辨识 VNodes。如果不使用 key，Vue 会使用一种最大限度减少动态元素并且尽可能的尝试就地修改/复用相同类型元素的算法。而使用 key 时，它会基于 key 的变化重新排列元素顺序，并且会移除/销毁 key 不存在的元素。
 
 - v-on 多事件处理器
 -  @click="one($event), two($event)" 执行两个方法 必须为event() event无效
