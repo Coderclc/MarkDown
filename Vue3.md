@@ -29,6 +29,27 @@
 14. 旧虚拟dom和新虚拟dom之间进行diff算法对比,key相同的之间比较,相同保留,不相同重绘,input输入框的值是在 real dom上的 ,因为用index比较,又打乱了顺序,所以会出错,默认的使用“就地更新”的策略。不会移动dom 的顺序,而是就地更新,即为能复用就复用. 或者是刻意依赖默认行为以获取性能上的提升(有时候默认行为性能反而更好)。
 
     > `key` 的特殊 attribute 主要用在 Vue 的虚拟 DOM 算法，在新旧 nodes 对比时辨识 VNodes。如果不使用 key，Vue 会使用一种最大限度减少动态元素并且尽可能的尝试就地修改/复用相同类型元素的算法。而使用 key 时，它会基于 key 的变化重新排列元素顺序，并且会移除/销毁 key 不存在的元素。
+    
+15. call(thisArg[, arg1[, arg2[, ...]]])  bind(thisArg[, arg1[, arg2[, ...]]])([, arg1[, arg2[, ...]]])
+
+    apply(thisArg, [argsArray])
+
+    ```
+        bar
+        constructor(foo) {
+            this.foo = foo
+            this.bar = this.fun.bind(this)
+        }
+        xxx.bar() ✔
+        const fn = xxx.bar  fn() ×
+    ```
+
+16. ```
+     arr.sort((x, y) => x - y) // 若 compare > 0 则 x,y 交换位置 升序
+     arr.sort((x, y) => y - x) // 若 compare < 0 则 x,y 位置不变 降序
+    ```
+
+    
 
 ##  Change
 
