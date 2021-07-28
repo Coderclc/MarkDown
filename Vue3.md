@@ -99,39 +99,33 @@
 
 17. easy data proxy
 
-    ​    function observer(obj) {
-
-    ​      const keys = Object.keys(obj)
-
+    ```
+    function observer(obj) {
+          const keys = Object.keys(obj)
+      keys.forEach(k => {
+            Object.defineProperty(this, k, {
+          get() {
+                return obj[k]
+          },
+              set(v) {
+            obj[k] = v
+              }
+        })
+          })
+    }
     
+    const obs = new observer(obj)
+    ```
 
-    ​      keys.forEach(k => {
+18. Vue.set(vm,key,value)  后添加observe  vm._data内的数据已被copy到了vm上(也可以操作数组)
 
-    ​        Object.defineProperty(this, k, {
+    > ​	但避免追加一个响应式的属性到Vue的实例或者根节点的$data上,必须用于响应式对象上添加新的prop
 
-    ​          get() {
+19. 直接通过数组的索引值修改是无法修改数组的因为无get,set 但是数组内的对象有get,set,而数组的方法能够被vue检测到是因为这些方法被hook了,被包装(对象,数组,等任何数据类型初始化定义都有getter和setter,只有数组内的索引,和新添加的,删除的没有getter,setter)
 
-    ​            return obj[k]
+20. 这样解释了为什么如果是getter的话,展示的数据为结果后的数据,因为都是在点击...的时候才重新获取,但如果console.log 到具体key就不同了,也解释了为什么我如果没有声明form.src就会导致src无法响应
 
-    ​          },
-
-    ​          set(v) {
-
-    ​            obj[k] = v
-
-    ​          }
-
-    ​        })
-
-    
-
-    ​      })
-
-    ​    }
-
-    
-
-    ​    const obs = new observer(obj)
+21. `**Object.defineProperty()**` 方法会直接在一个对象上定义一个新属性，或者修改一个对象的现有属性，并返回此对象。无法劫持新增,删除数组的索引值,第一个参数只能是对象,p'roxy无敌,proxy deleteProperty监听删除
 
 ##  Change
 
