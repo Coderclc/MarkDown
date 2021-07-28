@@ -44,12 +44,94 @@
         const fn = xxx.bar  fn() ×
     ```
 
-16. ```
+16. Sort
+
+    使用[原地算法](https://en.wikipedia.org/wiki/In-place_algorithm)对数组的元素进行排序，并返回change数组。默认排序顺序是在将元素转换为字符串，比较UTF-16代码单元值序列(默认升序)
+
+    - 如果 `compareFunction(a, b)` 小于 0 ，那么 a 会被排列到 b 之前；
+
+    - 如果 `compareFunction(a, b)` 等于 0 ， a 和 b 的相对位置不变。备注： ECMAScript 标准并不保证这一行为，而且也不是所有浏览器都会遵守（例如 Mozilla 在 2003 年之前的版本）；
+
+    - 如果 `compareFunction(a, b)` 大于 0 ， b 会被排列到 a 之前。(b本来就在a的前面,b为第n param a 为n+1)
+    - `compareFunction(a, b)` 必须总是对相同的输入返回相同的比较结果，否则排序的结果将是不确定的。
+
+    ```
      arr.sort((x, y) => x - y) // 若 compare > 0 则 x,y 交换位置 升序
      arr.sort((x, y) => y - x) // 若 compare < 0 则 x,y 位置不变 降序
     ```
 
+    正数 0 不动,负数调换位置
+
+    ```
+     function getSort(fn) {
+         return function (a, b) {
+             let ret = 0
     
+             if (fn.call(this, a, b)) { // a为第二参数 如果a>b为true 则返回-1调换位置,那么字面意义的a就大于b了
+                 ret = -1
+             } else if (fn.call(this, b, a)) {
+                 ret = 1
+             }
+    
+             return ret
+         }
+     }
+    注: 必须返回正数 0 负数 才能排序, 若直接返回x>y 布尔值无效,希望这样书写,字面意义强借助getSort 转换
+     function getMutipSort(arr) {
+         return function (a, b) {
+             let tmp
+             let i = 0
+    
+             do {
+                 tmp = arr[i++](a, b)  // 0 -1 1 
+             } while (tmp === 0 && i < arr.length) // 如果为0且数组还有额外值,才继续exe,否则return
+    
+             return tmp
+         }
+     }
+     
+      arr.sort(
+         getMutipSort([
+             getSort((a, b) => a.time > b.time),
+         ])
+     )
+    ```
+
+17. easy data proxy
+
+    ​    function observer(obj) {
+
+    ​      const keys = Object.keys(obj)
+
+    
+
+    ​      keys.forEach(k => {
+
+    ​        Object.defineProperty(this, k, {
+
+    ​          get() {
+
+    ​            return obj[k]
+
+    ​          },
+
+    ​          set(v) {
+
+    ​            obj[k] = v
+
+    ​          }
+
+    ​        })
+
+    
+
+    ​      })
+
+    ​    }
+
+    
+
+    ​    const obs = new observer(obj)
 
 ##  Change
 
