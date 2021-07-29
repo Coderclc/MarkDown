@@ -180,7 +180,7 @@ this.$emit('icon-click')
 <input onIconClick={this.onClick} />
 <input on={{'icon-click':this.onClick}} />
 native修饰符
-<input nativeOnIconClick={this.onClick} />
+<input nativeOnClick={this.onClick} />
 传参
 <input on-click={this.onClick.bind(this,argument)} />
 自定义事件名

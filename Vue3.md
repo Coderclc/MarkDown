@@ -127,6 +127,25 @@
 
 21. `**Object.defineProperty()**` 方法会直接在一个对象上定义一个新属性，或者修改一个对象的现有属性，并返回此对象。无法劫持新增,删除数组的索引值,第一个参数只能是对象,p'roxy无敌,proxy deleteProperty监听删除
 
+22. 同步队列 异步队列 作业队列
+
+    ```
+    consoloe.log('foo')
+    setTimeout(() => {
+    	console.log('bar')
+    }, 0);
+    new Promise(resolve =>
+        resolve('resolve')	
+    ).then(resolve => console.log(resolve)) 开启定时器,再将回调函数放到消息队列中,只有堆栈内无其他操作,才开始处理消息队列中的东西
+    将Promise 放到作业队列中（即当前函数执行完后被立即执行）
+    ```
+
+    
+
+23. > Vue 在更新 DOM 时是**异步**执行的。只要侦听到数据变化，Vue 将开启一个队列，并缓冲在同一事件循环中发生的所有数据变更。如果同一个 watcher 被多次触发，只会被推入到队列中一次。
+
+    watch监听 有getter和setter才能触发watch , 但触发了watch不一定会刷新dom,如果首次渲染后的依赖列表里面没有该prop,即使触发了watch也不会更新dom,因为其不在依赖项列表(即在渲染过程中被访问的 property) 消息队列,作业队列的开启另外的watch, 同一个队列触发多次watch,，只会被推入到队列中一次。但是不同队列会推多次.
+
 ##  Change
 
 1. monorepo 管理 
