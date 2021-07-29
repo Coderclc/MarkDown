@@ -145,6 +145,12 @@
 23. > Vue 在更新 DOM 时是**异步**执行的。只要侦听到数据变化，Vue 将开启一个队列，并缓冲在同一事件循环中发生的所有数据变更。如果同一个 watcher 被多次触发，只会被推入到队列中一次。
 
     watch监听 有getter和setter才能触发watch , 但触发了watch不一定会刷新dom,如果首次渲染后的依赖列表里面没有该prop,即使触发了watch也不会更新dom,因为其不在依赖项列表(即在渲染过程中被访问的 property) 消息队列,作业队列的开启另外的watch, 同一个队列触发多次watch,，只会被推入到队列中一次。但是不同队列会推多次.
+    
+24. v-model checkbox 为数组即为添加删除value值,  为字符串,布尔即收集checked值
+
+25. .numer 转为number 值 type=''number' 只能输入number
+
+26. day.js 轻量化
 
 ##  Change
 
