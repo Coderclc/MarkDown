@@ -152,6 +152,14 @@
 
 26. day.js 轻量化
 
+27. document.cookie 拿到当前浏览器的所有cookie,除了httponly
+
+28. console.dir print javaScript对象的属性，并通过类似文件树样式的交互列表显示
+
+29. dom对象 instanceof HTMLElement  检测真实dom
+
+30. `update`：所在组件的 VNode 更新时调用，**但是可能发生在其子 VNode 更新之前**。指令的值可能发生了改变，也可能没有。但是你可以通过比较更新前后的值来忽略不必要的模板更新  ,自定义指令的值该发生在dom tree update 而非单一bind value change
+
 ##  Change
 
 1. monorepo 管理 
