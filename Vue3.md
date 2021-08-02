@@ -165,6 +165,10 @@
     - defer 异步加载dom解析完成以后执行
     - async 异步加载并执行(执行的过程中会影响dom解析)
     - ![wfL82.png](https://segmentfault.com/img/bVWhRl?w=801&h=814
+    
+32. 在bind执行类似foucus,parentnode is invalid ,此时dom还未成功挂载,需要在insert中
+
+33. 因为切换eye导致input type change vdom refresh,此时刷新后的input与focus同时,须在nexttick执行,且mousedown为focus ,mouseup为click 
 
 ##  Change
 
