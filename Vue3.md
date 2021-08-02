@@ -160,6 +160,12 @@
 
 30. `update`：所在组件的 VNode 更新时调用，**但是可能发生在其子 VNode 更新之前**。指令的值可能发生了改变，也可能没有。但是你可以通过比较更新前后的值来忽略不必要的模板更新  ,自定义指令的值该发生在dom tree update 而非单一bind value change
 
+31. html 阻塞 即从上到下按顺序加载并且执行
+
+    - defer 异步加载dom解析完成以后执行
+    - async 异步加载并执行(执行的过程中会影响dom解析)
+    - ![wfL82.png](https://segmentfault.com/img/bVWhRl?w=801&h=814
+
 ##  Change
 
 1. monorepo 管理 
@@ -178,7 +184,7 @@
    - composition API 可以将相关联的代码放到同一行进行处理,而不需要在多个Options之间寻找
 6. Hooks 函数增加代码的复用性
    - Vue2.x使用mixins来共享组件逻辑,缺陷在于mixins也使由Options组成的,多个mixins会存在命名冲突的问题,
-   - 3.x可以通过hook函数,将一部分独立的逻辑抽取出去,并且还能做到是响应式的
+   - 3.x可以通过hook函数,将一部分独立的逻辑抽取出去,并且还能做到是响应式的![script](C:\Users\Coderclc\Documents\MarkDown\images\script.webp)
 
 
 
