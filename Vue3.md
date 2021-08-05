@@ -170,6 +170,20 @@
 
 33. 因为切换eye导致input type change vdom refresh,此时刷新后的input与focus同时,须在nexttick执行,且mousedown为focus ,mouseup为click 
 
+34. beforeCreated 数据代理数据监测之前此时debugger无coder自定义内容,data,method
+
+35. template 选项会整个替换div#app,而el,mouted只是挂载
+
+36. beforeUpdate 数据是新的页面是旧的,接下来 Virtual DOM re-render and patch
+
+37. vm.$destory()  beforeDestroy() destroyed() 里的getter不会才更新视图 ,一种是移除销毁,一直是调方法销毁,二者皆为解绑指令,移除事件监听,并不是真正意义上的销毁
+
+    > 在大多数场景中你不应该调用这个方法。最好使用 `v-if` 和 `v-for` 指令以数据驱动的方式控制子组件的生命周期。
+
+38.  this.$forceUpdate() 之前我认为的是调update() 逻辑错了,应该是强制刷新dom,更新一些无getter触发的dom,虚拟dom patch 会触发update
+
+39. Vue.extend 创建组件构造器 模板来源于 template 选项 或者template 标签,使用的时候,在局部注册挂载, 或者new 一个实例$mounted
+
 ##  Change
 
 1. monorepo 管理 
@@ -699,7 +713,7 @@ v-is 值应为 JavaScript 字符串文本：
   zoe.install = Vue => {
     const ToastConstructor = Vue.extend(Toast) // 得到组件构造器类
     toast = new ToastConstructor() 得到vue 的实例
-    toast.$mount(document.createElement('div')) 该方法在Vue的原型上,根组件app也是如此挂载,此时还没有$el,必须挂载在一个el上才有,才能挂在dom上
+    toast.$mount(document.createElement('div')) 该方法在Vue的原型上,根组件app也是如此挂载,此时还没有$el,必须挂载在一个el上才有,才能挂在dom上(参考生命周期mounted执行完毕以后$el代替el)
     document.body.appendChild(toast.$el) 直接
     Vue.prototype.$toast = toast
   }
