@@ -184,6 +184,42 @@
 
 39. Vue.extend 创建组件构造器 模板来源于 template 选项 或者template 标签,使用的时候,在局部注册挂载, 或者new 一个实例$mounted
 
+40. vue devtools 名字取决于选项名字
+
+41. 在非.vue ,标签首字母会被html转换为小写,其余不会转换,html模板无法识别大写
+
+42. Vue.extend 生产的是组件构造函数,组件构造器 1.手动new construction()2.写</> Vue会帮我们new一个实例对象
+
+43. 组件构造器的原型是一个Vue的实例,组件构造器的显示原型的隐示原型指向Vue的显示原型
+
+44. index.html
+
+    - noscript 不支持js
+
+    -  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+      针对ie的配置,使其使用最高级别的渲染级别渲染页面
+
+    - <meta name="viewport" content="width=device-width,initial-scale=1.0">
+      开启移动端的理想视口
+    
+45. vue-template-compiler 解析.vue 的template
+
+46. 找node_modules下同名的包,再根据文件内的package.json的"module":,找到js文件,如果没有main,则找文件夹内的index.js,找不到就在node的上一级找,直到磁盘根目录.main有意外暴露内容的风险
+
+47. 查看vue的所有配置项目 vue inspect > output.js
+
+48. npm view package versions    npm init vite@latest
+
+49. id不会用number类型, 因为number类型是有尽头的
+
+50. uuid 全球唯一字符串编码,1日期时间2.时钟序列3,全局唯一的IEEE机器识别号
+
+    nanoid  uuid一定程度的缩减
+
+51. prop可以是一个函数,那么子组件可以通过prop函数传递数据,prop 只有改变基本数据类型和引用数据类型地址才会报错,其余不报错
+
+52. v-model 一个计算属性就不用写@change了例如checkbox上
+
 ##  Change
 
 1. monorepo 管理 
