@@ -22,10 +22,6 @@
 
 11. template 只会找vm上的,和原型不会去找全局作用域 但在js上可以把window放在data身上,
 
-12. v-for (item,index) 可以不写括号,不过这是一个好习惯
-
-13. for in  for of 相同  可便利数字,对象,数组
-
 14. 旧虚拟dom和新虚拟dom之间进行diff算法对比,key相同的之间比较,相同保留,不相同重绘,input输入框的值是在 real dom上的 ,因为用index比较,又打乱了顺序,所以会出错,默认的使用“就地更新”的策略。不会移动dom 的顺序,而是就地更新,即为能复用就复用. 或者是刻意依赖默认行为以获取性能上的提升(有时候默认行为性能反而更好)。
 
     > `key` 的特殊 attribute 主要用在 Vue 的虚拟 DOM 算法，在新旧 nodes 对比时辨识 VNodes。如果不使用 key，Vue 会使用一种最大限度减少动态元素并且尽可能的尝试就地修改/复用相同类型元素的算法。而使用 key 时，它会基于 key 的变化重新排列元素顺序，并且会移除/销毁 key 不存在的元素。
@@ -158,7 +154,7 @@
 
 29. dom对象 instanceof HTMLElement  检测真实dom
 
-30. `update`：所在组件的 VNode 更新时调用，**但是可能发生在其子 VNode 更新之前**。指令的值可能发生了改变，也可能没有。但是你可以通过比较更新前后的值来忽略不必要的模板更新  ,自定义指令的值该发生在dom tree update 而非单一bind value change
+30. 自定义指令`update`：所在组件的 VNode 更新时调用，**但是可能发生在其子 VNode 更新之前**。指令的值可能发生了改变，也可能没有。但是你可以通过比较更新前后的值来忽略不必要的模板更新  ,自定义指令的值该发生在dom tree update 而非单一bind value change
 
 31. html 阻塞 即从上到下按顺序加载并且执行
 
@@ -188,9 +184,9 @@
 
 41. 在非.vue ,标签首字母会被html转换为小写,其余不会转换,html模板无法识别大写
 
-42. Vue.extend 生产的是组件构造函数,组件构造器 1.手动new construction()2.写</> Vue会帮我们new一个实例对象
+42. Vue.extend 生产的是组件构造函数,组件构造器 1.手动new construction()2.写</> Vue会帮我们new一个实例对象 注册执行Vue.extend,一个实例标签一个 new
 
-43. 组件构造器的原型是一个Vue的实例,组件构造器的显示原型的隐示原型指向Vue的显示原型
+43. 组件构造器的原型是一个Vue的实例,组件构造器的显示原型的隐示原型指向Vue的显示原型,采用Object.create
 
 44. index.html
 
@@ -216,9 +212,23 @@
 
     nanoid  uuid一定程度的缩减
 
-51. prop可以是一个函数,那么子组件可以通过prop函数传递数据,prop 只有改变基本数据类型和引用数据类型地址才会报错,其余不报错
+49. prop可以是一个函数,那么子组件可以通过prop函数传递数据,prop 只有改变基本数据类型和引用数据类型地址才会报错,其余不报错
 
-52. v-model 一个计算属性就不用写@change了例如checkbox上
+50. v-model 一个计算属性就不用写@change了例如checkbox上
+
+51. window上的方法是直接暴露出来的!!!!!!!!!!!!!!
+
+52. 1.获取 dom 添加onclick 事件  2.直接在元素上声明onclick="onClick()" 必须带小括号
+
+53. localStorage setItem 第二个参数为非string形式会执行toString 方法
+
+54. localStorage setItem getItem removeItem clear()
+
+55. vm.$refs.cpn.$on('test', function (msg) {  console.log(msg) }) 手动监听自定义事件
+
+56. 因为destroy() 会teardown watchers child components and event listeners 销毁会拆解自定义事件,无论是@还是 $on绑定的事件都会被拆解,$off可以在指定的时候teardown,且都能拆
+
+57. $emit 和$on必须是同一个实例
 
 ##  Change
 
