@@ -228,7 +228,27 @@
 
 56. 因为destroy() 会teardown watchers child components and event listeners 销毁会拆解自定义事件,无论是@还是 $on绑定的事件都会被拆解,$off可以在指定的时候teardown,且都能拆
 
-57. $emit 和$on必须是同一个实例
+57. $emit 和$on必须是同一个实例 且$on 的function 回调this不是window而是触发的实例
+
+58. 可在vue.beforeCreate之前添加$bus
+
+59. $set 就可以不用初始化添加一些例如isEdit = false 这种数据了 完美一点使用hasOwnProperty''防止重复$set
+
+60. 动画在active 过渡在to leave
+
+61. axios $ajax 基于xhr 封装 fetch 地位相对于xhr,返回两层promise
+
+62. CORS 要求协议 主机端口相同 1.后端配置cors 2. jsonp 返回一个执行同名函数 3. 代理服务器,服务之间无跨域问题
+
+63. devServer proxy 执行后端,本地请求指向本机代理,1.本地已有不会转发2.无法配置多个,1.字符串public已有不转发否则转发 
+
+64. 避免以上情况 使用 [http-proxy-middleware](https://github.com/chimurai/http-proxy-middleware#proxycontext-config) . ,配置前缀,为转发,否则不转发,转发会把前缀也带上,需要不在官网的配置   pathRewrite: {'^/api': '' }, ws proxy websockets ,  changeOrigin: false, 伪装 true伪装成服务器端口
+
+65. 插槽的作用域为父,但样式作用域为父子
+
+66. 插槽相同名字为累加而非覆盖.
+
+67. \&nbsp;空格
 
 ##  Change
 
