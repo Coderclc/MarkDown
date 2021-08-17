@@ -208,3 +208,7 @@ div{
 - overflow-anchor 新内容载入时scroll位置
 - scroll-snap 一次只滑一个元素
 - touch-action:manipulation
+
+- background-attachment: fixed; 背景图
+- element 两张不同颜色堆叠
+- \<picture>

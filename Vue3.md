@@ -250,6 +250,16 @@
 
 67. \&nbsp;空格
 
+68. 安装了Vuex之后 配置在vue 的选项store 会在实例上挂着$store
+
+69. Vue.use(Vuex) 必须在new Vuex.Store 之前 ,无法通过调整import 的顺序,(会提前)可通过异步import('')调整
+
+70. import 的提前原生就是这样的 type='module' 而非webpack
+
+71. actions 和 mutations都可以同步操作,但是devtools 只记载mutations
+
+72. 同步操作有没有必要多加一步呢,emm加上吧,大佬如此
+
 ##  Change
 
 1. monorepo 管理 
