@@ -258,7 +258,7 @@
 
 71. actions 和 mutations都可以同步操作,但是devtools 只记载mutations
 
-72. 同步操作有没有必要多加一步呢,emm加上吧,大佬如此
+72. COMMIT eventname 大写
 
 ##  Change
 
