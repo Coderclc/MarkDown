@@ -260,6 +260,26 @@
 
 72. COMMIT eventname 大写
 
+73. xhr 可在回调之前xhr.abort() 取消请求,发出了请求,但被取消了 而axios 是取消发出
+
+74. cancelToken  config 里需要  const CancelToken = axios.CancelToken;     // cancelToken: new CancelToken(function executor(c) {  cancel = c; })的返回值,且执行c()
+
+75. vuex  module   state 在对象, mapstate 始终暴露 state 但加了命名空间即可 ...mapState('user',['name']), 暴露内部,其余还有 xxx/xxx形式
+
+76. 在module 作用域 会收到局部的dispatch和commit 但相反要使用全局的需要在第三个参数加{ root: true }
+
+77. 在module作用域注册全局action或者mutation 使用 handler 和  root: true,
+
+78. namespace true 将原本mapxxx 参数对象或者数组作为第二个参数,第一更为空间string 
+
+    ```
+    或者
+    import { createNamespacedHelpers } from 'vuex'
+    const { mapState, mapActions } = createNamespacedHelpers('some/nested/module')
+    ```
+
+    
+
 ##  Change
 
 1. monorepo 管理 
