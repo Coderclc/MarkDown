@@ -185,6 +185,9 @@ native修饰符
 <input on-click={this.onClick.bind(this,argument)} />
 自定义事件名
 on={{[this.event]:this.onClick}}
+
+on-click={$event => this.event(param, $event)}
+on-click={() => (this.???=???)}
 ```
 
 - v-html:
