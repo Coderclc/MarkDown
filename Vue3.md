@@ -1,287 +1,5 @@
 # Vue3
 
-1. $methods 为 提供的方法 _为非提供
-
-2. object.defineproperty() 在浏览器的颜色会淡一点,是不可枚举的
-
-3. 如果为(...) invoke property getter 即为设置了代理
-
-4. vue 将_data的方法数据代理到vm上,将method的方法clone到vm上'
-
-5. passive 用于移动端操作先执行默认行为 ' ,并不是所有的行为,少部分
-
-6. 获取e.key,e.keyCode  将key(name) 转为.kebab-case
-
-7. tab 在keyup的时候已经切走了光标,无法捕获,需要使用keydown
-
-8. 系统修饰键 .ctrl .alt .shift .meta keyup必须要修饰其他案件,且在释放其他按键后触发,keydown直接触发
-
-9. Vue.config.keyCodes  自定义keycodes
-
-10. 如果页面没有发生改变,即使数据改变vuedevtools视图不会刷新
-
-11. template 只会找vm上的,和原型不会去找全局作用域 但在js上可以把window放在data身上,
-
-14. 旧虚拟dom和新虚拟dom之间进行diff算法对比,key相同的之间比较,相同保留,不相同重绘,input输入框的值是在 real dom上的 ,因为用index比较,又打乱了顺序,所以会出错,默认的使用“就地更新”的策略。不会移动dom 的顺序,而是就地更新,即为能复用就复用. 或者是刻意依赖默认行为以获取性能上的提升(有时候默认行为性能反而更好)。
-
-    > `key` 的特殊 attribute 主要用在 Vue 的虚拟 DOM 算法，在新旧 nodes 对比时辨识 VNodes。如果不使用 key，Vue 会使用一种最大限度减少动态元素并且尽可能的尝试就地修改/复用相同类型元素的算法。而使用 key 时，它会基于 key 的变化重新排列元素顺序，并且会移除/销毁 key 不存在的元素。
-    
-15. call(thisArg[, arg1[, arg2[, ...]]])  bind(thisArg[, arg1[, arg2[, ...]]])([, arg1[, arg2[, ...]]])
-
-    apply(thisArg, [argsArray])
-
-    ```
-        bar
-        constructor(foo) {
-            this.foo = foo
-            this.bar = this.fun.bind(this)
-        }
-        xxx.bar() ✔
-        const fn = xxx.bar  fn() ×
-    ```
-
-16. Sort
-
-    使用[原地算法](https://en.wikipedia.org/wiki/In-place_algorithm)对数组的元素进行排序，并返回change数组。默认排序顺序是在将元素转换为字符串，比较UTF-16代码单元值序列(默认升序)
-
-    - 如果 `compareFunction(a, b)` 小于 0 ，那么 a 会被排列到 b 之前；
-
-    - 如果 `compareFunction(a, b)` 等于 0 ， a 和 b 的相对位置不变。备注： ECMAScript 标准并不保证这一行为，而且也不是所有浏览器都会遵守（例如 Mozilla 在 2003 年之前的版本）；
-
-    - 如果 `compareFunction(a, b)` 大于 0 ， b 会被排列到 a 之前。(b本来就在a的前面,b为第n param a 为n+1)
-    - `compareFunction(a, b)` 必须总是对相同的输入返回相同的比较结果，否则排序的结果将是不确定的。
-
-    ```
-     arr.sort((x, y) => x - y) // 若 compare > 0 则 x,y 交换位置 升序
-     arr.sort((x, y) => y - x) // 若 compare < 0 则 x,y 位置不变 降序
-    ```
-
-    正数 0 不动,负数调换位置
-
-    ```
-     function getSort(fn) {
-         return function (a, b) {
-             let ret = 0
-    
-             if (fn.call(this, a, b)) { // a为第二参数 如果a>b为true 则返回-1调换位置,那么字面意义的a就大于b了
-                 ret = -1
-             } else if (fn.call(this, b, a)) {
-                 ret = 1
-             }
-    
-             return ret
-         }
-     }
-    注: 必须返回正数 0 负数 才能排序, 若直接返回x>y 布尔值无效,希望这样书写,字面意义强借助getSort 转换
-     function getMutipSort(arr) {
-         return function (a, b) {
-             let tmp
-             let i = 0
-    
-             do {
-                 tmp = arr[i++](a, b)  // 0 -1 1 
-             } while (tmp === 0 && i < arr.length) // 如果为0且数组还有额外值,才继续exe,否则return
-    
-             return tmp
-         }
-     }
-     
-      arr.sort(
-         getMutipSort([
-             getSort((a, b) => a.time > b.time),
-         ])
-     )
-    ```
-
-17. easy data proxy
-
-    ```
-    function observer(obj) {
-          const keys = Object.keys(obj)
-      keys.forEach(k => {
-            Object.defineProperty(this, k, {
-          get() {
-                return obj[k]
-          },
-              set(v) {
-            obj[k] = v
-              }
-        })
-          })
-    }
-    
-    const obs = new observer(obj)
-    ```
-
-18. Vue.set(vm,key,value)  后添加observe  vm._data内的数据已被copy到了vm上(也可以操作数组)
-
-    > ​	但避免追加一个响应式的属性到Vue的实例或者根节点的$data上,必须用于响应式对象上添加新的prop
-
-19. 直接通过数组的索引值修改是无法修改数组的因为无get,set 但是数组内的对象有get,set,而数组的方法能够被vue检测到是因为这些方法被hook了,被包装(对象,数组,等任何数据类型初始化定义都有getter和setter,只有数组内的索引,和新添加的,删除的没有getter,setter)
-
-20. 这样解释了为什么如果是getter的话,展示的数据为结果后的数据,因为都是在点击...的时候才重新获取,但如果console.log 到具体key就不同了,也解释了为什么我如果没有声明form.src就会导致src无法响应
-
-21. `**Object.defineProperty()**` 方法会直接在一个对象上定义一个新属性，或者修改一个对象的现有属性，并返回此对象。无法劫持新增,删除数组的索引值,第一个参数只能是对象,p'roxy无敌,proxy deleteProperty监听删除
-
-22. 同步队列 异步队列 作业队列
-
-    ```
-    consoloe.log('foo')
-    setTimeout(() => {
-    	console.log('bar')
-    }, 0);
-    new Promise(resolve =>
-        resolve('resolve')	
-    ).then(resolve => console.log(resolve)) 开启定时器,再将回调函数放到消息队列中,只有堆栈内无其他操作,才开始处理消息队列中的东西
-    将Promise 放到作业队列中（即当前函数执行完后被立即执行）
-    ```
-
-    
-
-23. > Vue 在更新 DOM 时是**异步**执行的。只要侦听到数据变化，Vue 将开启一个队列，并缓冲在同一事件循环中发生的所有数据变更。如果同一个 watcher 被多次触发，只会被推入到队列中一次。
-
-    watch监听 有getter和setter才能触发watch , 但触发了watch不一定会刷新dom,如果首次渲染后的依赖列表里面没有该prop,即使触发了watch也不会更新dom,因为其不在依赖项列表(即在渲染过程中被访问的 property) 消息队列,作业队列的开启另外的watch, 同一个队列触发多次watch,，只会被推入到队列中一次。但是不同队列会推多次.
-    
-24. v-model checkbox 为数组即为添加删除value值,  为字符串,布尔即收集checked值
-
-25. .numer 转为number 值 type=''number' 只能输入number
-
-26. day.js 轻量化
-
-27. document.cookie 拿到当前浏览器的所有cookie,除了httponly
-
-28. console.dir print javaScript对象的属性，并通过类似文件树样式的交互列表显示
-
-29. dom对象 instanceof HTMLElement  检测真实dom
-
-30. 自定义指令`update`：所在组件的 VNode 更新时调用，**但是可能发生在其子 VNode 更新之前**。指令的值可能发生了改变，也可能没有。但是你可以通过比较更新前后的值来忽略不必要的模板更新  ,自定义指令的值该发生在dom tree update 而非单一bind value change
-
-31. html 阻塞 即从上到下按顺序加载并且执行
-
-    - defer 异步加载dom解析完成以后执行
-    - async 异步加载并执行(执行的过程中会影响dom解析)
-    - ![wfL82.png](https://segmentfault.com/img/bVWhRl?w=801&h=814
-    
-32. 在bind执行类似foucus,parentnode is invalid ,此时dom还未成功挂载,需要在insert中
-
-33. 因为切换eye导致input type change vdom refresh,此时刷新后的input与focus同时,须在nexttick执行,且mousedown为focus ,mouseup为click 
-
-34. beforeCreated 数据代理数据监测之前此时debugger无coder自定义内容,data,method
-
-35. template 选项会整个替换div#app,而el,mouted只是挂载
-
-36. beforeUpdate 数据是新的页面是旧的,接下来 Virtual DOM re-render and patch
-
-37. vm.$destory()  beforeDestroy() destroyed() 里的getter不会才更新视图 ,一种是移除销毁,一直是调方法销毁,二者皆为解绑指令,移除事件监听,并不是真正意义上的销毁
-
-    > 在大多数场景中你不应该调用这个方法。最好使用 `v-if` 和 `v-for` 指令以数据驱动的方式控制子组件的生命周期。
-
-38.  this.$forceUpdate() 之前我认为的是调update() 逻辑错了,应该是强制刷新dom,更新一些无getter触发的dom,虚拟dom patch 会触发update
-
-39. Vue.extend 创建组件构造器 模板来源于 template 选项 或者template 标签,使用的时候,在局部注册挂载, 或者new 一个实例$mounted
-
-40. vue devtools 名字取决于选项名字
-
-41. 在非.vue ,标签首字母会被html转换为小写,其余不会转换,html模板无法识别大写
-
-42. Vue.extend 生产的是组件构造函数,组件构造器 1.手动new construction()2.写</> Vue会帮我们new一个实例对象 注册执行Vue.extend,一个实例标签一个 new
-
-43. 组件构造器的原型是一个Vue的实例,组件构造器的显示原型的隐示原型指向Vue的显示原型,采用Object.create
-
-44. index.html
-
-    - noscript 不支持js
-
-    -  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-      针对ie的配置,使其使用最高级别的渲染级别渲染页面
-
-    - <meta name="viewport" content="width=device-width,initial-scale=1.0">
-      开启移动端的理想视口
-    
-45. vue-template-compiler 解析.vue 的template
-
-46. 找node_modules下同名的包,再根据文件内的package.json的"module":,找到js文件,如果没有main,则找文件夹内的index.js,找不到就在node的上一级找,直到磁盘根目录.main有意外暴露内容的风险
-
-47. 查看vue的所有配置项目 vue inspect > output.js
-
-48. npm view package versions    npm init vite@latest
-
-49. id不会用number类型, 因为number类型是有尽头的
-
-50. uuid 全球唯一字符串编码,1日期时间2.时钟序列3,全局唯一的IEEE机器识别号
-
-    nanoid  uuid一定程度的缩减
-
-49. prop可以是一个函数,那么子组件可以通过prop函数传递数据,prop 只有改变基本数据类型和引用数据类型地址才会报错,其余不报错
-
-50. v-model 一个计算属性就不用写@change了例如checkbox上
-
-51. window上的方法是直接暴露出来的!!!!!!!!!!!!!!
-
-52. 1.获取 dom 添加onclick 事件  2.直接在元素上声明onclick="onClick()" 必须带小括号
-
-53. localStorage setItem 第二个参数为非string形式会执行toString 方法
-
-54. localStorage setItem getItem removeItem clear()
-
-55. vm.$refs.cpn.$on('test', function (msg) {  console.log(msg) }) 手动监听自定义事件
-
-56. 因为destroy() 会teardown watchers child components and event listeners 销毁会拆解自定义事件,无论是@还是 $on绑定的事件都会被拆解,$off可以在指定的时候teardown,且都能拆
-
-57. $emit 和$on必须是同一个实例 且$on 的function 回调this不是window而是触发的实例
-
-58. 可在vue.beforeCreate之前添加$bus
-
-59. $set 就可以不用初始化添加一些例如isEdit = false 这种数据了 完美一点使用hasOwnProperty''防止重复$set
-
-60. 动画在active 过渡在to leave
-
-61. axios $ajax 基于xhr 封装 fetch 地位相对于xhr,返回两层promise
-
-62. CORS 要求协议 主机端口相同 1.后端配置cors 2. jsonp 返回一个执行同名函数 3. 代理服务器,服务之间无跨域问题
-
-63. devServer proxy 执行后端,本地请求指向本机代理,1.本地已有不会转发2.无法配置多个,1.字符串public已有不转发否则转发 
-
-64. 避免以上情况 使用 [http-proxy-middleware](https://github.com/chimurai/http-proxy-middleware#proxycontext-config) . ,配置前缀,为转发,否则不转发,转发会把前缀也带上,需要不在官网的配置   pathRewrite: {'^/api': '' }, ws proxy websockets ,  changeOrigin: false, 伪装 true伪装成服务器端口
-
-65. 插槽的作用域为父,但样式作用域为父子
-
-66. 插槽相同名字为累加而非覆盖.
-
-67. \&nbsp;空格
-
-68. 安装了Vuex之后 配置在vue 的选项store 会在实例上挂着$store
-
-69. Vue.use(Vuex) 必须在new Vuex.Store 之前 ,无法通过调整import 的顺序,(会提前)可通过异步import('')调整
-
-70. import 的提前原生就是这样的 type='module' 而非webpack
-
-71. actions 和 mutations都可以同步操作,但是devtools 只记载mutations
-
-72. COMMIT eventname 大写
-
-73. xhr 可在回调之前xhr.abort() 取消请求,发出了请求,但被取消了 而axios 是取消发出
-
-74. cancelToken  config 里需要  const CancelToken = axios.CancelToken;     // cancelToken: new CancelToken(function executor(c) {  cancel = c; })的返回值,且执行c()
-
-75. vuex  module   state 在对象, mapstate 始终暴露 state 但加了命名空间即可 ...mapState('user',['name']), 暴露内部,其余还有 xxx/xxx形式
-
-76. 在module 作用域 会收到局部的dispatch和commit 但相反要使用全局的需要在第三个参数加{ root: true }
-
-77. 在module作用域注册全局action或者mutation 使用 handler 和  root: true,
-
-78. namespace true 将原本mapxxx 参数对象或者数组作为第二个参数,第一更为空间string 
-
-    ```
-    或者
-    import { createNamespacedHelpers } from 'vuex'
-    const { mapState, mapActions } = createNamespacedHelpers('some/nested/module')
-    ```
-
-    
-
-##  Change
-
 1. monorepo 管理 
    - mono 单个,repo repository仓库
    - 多个包之间相互独立,有自己的功能逻辑,单元测试,同一个仓库下方便管理
@@ -292,15 +10,44 @@
    - 删除了$on,$off,$once,
    - 移除了filter,内联模板inline-template(在父组件中声明的数据和子组件中声明的数据两个都可以渲染,这反而是缺点)等
 4. 编译方面的优化
-   - 生成block tree ,slot编译优化,diff算法优化
+   - 生成block tree ,slot编译优化,diff算法优化,打包大小减少41%,初次渲染快了55%,更新渲染快133%,内存减少54%
+   - 冲重写虚拟DOM的实现和实现更好的tree-shaking
 5. 由Options API到Composition Api
    - 在Vue2.x通过Options API来描述组件对象,包括 data,props,methods,computed,生命周期等选项,问题在于多个逻辑可能实在不同的地方,跳来跳去?
    - composition API 可以将相关联的代码放到同一行进行处理,而不需要在多个Options之间寻找
 6. Hooks 函数增加代码的复用性
    - Vue2.x使用mixins来共享组件逻辑,缺陷在于mixins也使由Options组成的,多个mixins会存在命名冲突的问题,
    - 3.x可以通过hook函数,将一部分独立的逻辑抽取出去,并且还能做到是响应式的![script](C:\Users\Coderclc\Documents\MarkDown\images\script.webp)
+7. 拥抱ts
+8. vite 上来就server ready 其次请求再分析依赖
+9. const app = createApp(App) 更轻了
+10. setup
+    - 新的配置项 是一个在所有生命周期之前的函数(所以没有this)
+    - 返回对象则用于模板中使用,或者直接返回render函数()=>(\<section>\</section>)
+    - 尽量不要混这些,vue2.x中可以访问setup中的属性和方法,反过来不行,没有this
+    - 如果重名,setup优先 object.assign
+    - 不想写根就用<></>来写
+11. refImpl reference implement 引用实现 在模板中自动展开.value ,render不会自动展开返回引用实现的实例
+12. ref 代理基本数据类型用的object.define,引用用的proxy,reactive 代理用的proxy, ref代理对象其实就是使用了ref(reactive())
+13. ref中的普通对象会被转换成proxy,通过.value访问,
+14. 读取proxy key中的 refImpl 会自动展开value,index值不会自动展开
+15. ref(ref()) reactive(reactive()) 返回自身  ref(reactive()) reactive(ref())返回ref 
+16. delete 这个关键字是有返回值的,比如删除无配置不可枚举的对象key值会返回false
+17. Object,defineProperty can't redefine  Reflect.defineProperty可以
+18. Reflect.defineProperty有返回布尔值表示代理的成功与否
+19. this.$slots.default 是一个vnode 所以用于render而非template
+20. setup有两个参数,第一个是props选项声明过的参数.第二个是ctx 包含{attrs(未声明props),emit,slots,expose}
+21. 似乎只支持 onSubmit 小驼峰写法了监听事件
+22. vue3ref  通过 ref() 生成的变量绑定在模板或者渲染函数中的ref 然后在onMounted 生命周期即可获得组件实例的cpn.value的Proxy 对象 ,而setup中的参数 expose 可以将ref获取到的实例对象改为expose暴露出的对象
+23. computed 返回也是一个引用实现实例对象,且computed,和watch只能捕获到响应式数据的变化
+24. watch 监听多个可以多次调用或者传入数组,接收到的新值旧值也是数组
+25. - 新旧值相同的地址(vue2就有这个问题),
+    - 似乎不需要deep:true就可以深度监听,(proxy对象不需要强制deep 函数返回对象需要deep,函数返回基本数据类型不需要多深都不需要
+    - 无法监听对象的key这样监听.state.count 采用回调函数()=>state.count 
+    - 无法监听到ref 中的proxy中的改变.需要通过.value直接监听proxy,或者开启deep
 
-
+26. Vue3生命周期 app相对于vm更轻量化, unmounted,beforeUnmount重命名,必须挂载才能执行初始化init,(vue2可以再执行完created之后再挂载)
+27. hooks 文件夹  useXXX.js
 
 # Vue3
 
@@ -956,7 +703,9 @@ v-is 值应为 JavaScript 字符串文本：
 
   - ref 响应式值 
 
-  - 当 `ref` 作为响应式对象的 property 被访问或更改时自动展开为value
+  - 当 `ref` 作为响应式对象reactive的 property 被访问或更改时自动展开为value
+
+  - 即访问state.ref = ref.value  访问 state[0] = ref
 
     ```
     ref =  0  state{ref}
@@ -1018,8 +767,8 @@ v-is 值应为 JavaScript 字符串文本：
 
     ```
     const count = ref(0)
-    watchEffect(() => console.log(count.value))
-    // -> logs 0
+    watchEffect(() => count.value               // 函数的任何数据发生改变都会变化
+    // -> logs 0								// 但是要具体到变化的值被引用才行
     setTimeout(() => {
       count.value++
       // -> logs 1

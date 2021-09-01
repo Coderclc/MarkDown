@@ -97,7 +97,7 @@
       placeholder: 'Enter your email',
         [this.title]: 'Enter your email' // 自定义b
     }
-     return <input {...{ attrs}} />
+     return <input {...attrs} />
   }
   ```
   
