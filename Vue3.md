@@ -41,7 +41,7 @@
 22. vue3ref  通过 ref() 生成的变量绑定在模板或者渲染函数中的ref 然后在onMounted 生命周期即可获得组件实例的cpn.value的Proxy 对象 ,而setup中的参数 expose 可以将ref获取到的实例对象改为expose暴露出的对象
 23. computed 返回也是一个引用实现实例对象,且computed,和watch只能捕获到响应式数据的变化
 24. watch 监听多个可以多次调用或者传入数组,接收到的新值旧值也是数组
-25. - 新旧值相同的地址(vue2就有这个问题),
+25. - 引用数据类型新旧值相同的地址(vue2就有这个问题),
     - 似乎不需要deep:true就可以深度监听,(proxy对象不需要强制deep 函数返回对象需要deep,函数返回基本数据类型不需要多深都不需要
     - 无法监听对象的key这样监听.state.count 采用回调函数()=>state.count 
     - 无法监听到ref 中的proxy中的改变.需要通过.value直接监听proxy,或者开启deep
@@ -679,6 +679,7 @@ v-is 值应为 JavaScript 字符串文本：
       ```
 
 - Vue 在get 方法执行了   effect track(target, prop)  在set 方法执行 trigger(target, key)
+
 - Vue 如何处理这些更改的答案
   - ~~当某个值发生变化时进行检测~~：我们不再需要这样做，因为 Proxy 允许我们拦截它
   - **跟踪更改它的函数**：我们在 Proxy 中的 getter 中执行此操作，称为 `effect`
@@ -765,6 +766,10 @@ v-is 值应为 JavaScript 字符串文本：
 
   - watchEffect
 
+    执行时机,在setup函数相当于执行了一次函数,也可以在生命周期例如onMounted执行
+
+    函数内的依赖值发生变化时重新执行
+
     ```
     const count = ref(0)
     watchEffect(() => count.value               // 函数的任何数据发生改变都会变化
@@ -784,4 +789,38 @@ v-is 值应为 JavaScript 字符串文本：
     stop()
     ```
 
-    
+    - 依赖改变时重新执行的时机,缓冲同一队列的tick.,默认情况下 第三个参数 { flush: 'pre' } watchEffect的执行时机在onBeforeUpdate之前,可传入post,则在组件更新**后**重新运行侦听器副作用
+
+      
+
+  - onInvalidate 清除时机
+
+    - 副作用即将重新执行时(),先执行上一个watchEffect 的onInvalidate ,再执行新的onInvalidate 
+    - stop()之后执行
+    - 组件卸载后执行,自杀api已移除
+
+- !! 这里有一个概念,执行了watchEffect函数,注册了传入watchEffect的回调函数,并执行一次,同理第一次进来要先执行onInvalidate函数并且注册onInvalidate里的回调.所以第一次注册 onInvalidate 里应当在所有watchEffect中的异步操作之前,否则异步操作会导致onInvalidate无法被注册
+
+     ```
+     const data = ref(null)
+     watchEffect(async onInvalidate => {
+       onInvalidate(() => {...}) // 我们在Promise解析之前注册清除函数
+       data.value = await fetchData(props.id)
+     })
+     // 但还是有弊病,如果异步之后注册,那么第一次注册之前的change,onInvalidate无法清除,然后无论是在前还是在后,上一个await 还未来得及获取await 的token,就执行token.cancel,将会导致错误
+     ```
+
+     目前理解最好的解决方案,await 前后 loading, 最上方注册,onInvalidate清除结果注意null,还是会有突然强制销毁的可能
+
+- 侦听器调试
+
+  - `onTrack` 和 `onTrigger` 选项可用于调试侦听器的行为。`onTrack` 和 `onTrigger` 只能在开发模式下工作
+  - `onTrack` 将在响应式 property 或 ref 作为依赖项被追踪时被调用。
+
+  - `onTrigger` 将在依赖项变更导致副作用被触发时被调用。
+  - 执行顺序watchEffect->onTrack->onTrigger->onInvalidate 
+
+- `watch` 与 [`watchEffect`](https://vue3js.cn/docs/zh/guide/reactivity-computed-watchers.html#watcheffect)共享[停止侦听](https://vue3js.cn/docs/zh/guide/reactivity-computed-watchers.html#停止侦听)，[清除副作用](https://vue3js.cn/docs/zh/guide/reactivity-computed-watchers.html#清除副作用) (相应地 `onInvalidate` 会作为回调的第三个参数传入)、[副作用刷新时机](https://vue3js.cn/docs/zh/guide/reactivity-computed-watchers.html#副作用刷新时机)和[侦听器调试](https://vue3js.cn/docs/zh/guide/reactivity-computed-watchers.html#侦听器调试)行为。
+
+  stop,onInvalidate, { flush: 'pre' },onTrack/onTrigger
+

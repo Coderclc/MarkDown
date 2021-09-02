@@ -1,4 +1,6 @@
-# _Vue2 JSX
+# JSX
+
+## Vue2
 
 - 在render中渲染xml 对象为underfined
 
@@ -274,4 +276,39 @@ v-show={true}
        }
     ```
     
-    
+
+## Vue3
+
+一 、 vite config
+
+```
+// vite.config.js
+import vueJsx from '@vitejs/plugin-vue-jsx'
+
+export default {
+  plugins: [
+    vueJsx({
+      // options are passed on to @vue/babel-plugin-jsx
+    })
+  ]
+}
+```
+
+
+
+二、Slots
+
+**`v-slots`** 代替 *`scoped `*
+
+slots.default?.()
+
+```
+<A>
+    {{
+        default: () => <div>A</div>,
+        bar: () => <span>B</span>,
+    }}
+</A>
+直接写在
+```
+
