@@ -189,7 +189,8 @@ native修饰符
 on={{[this.event]:this.onClick}}
 
 on-click={$event => this.event(param, $event)}
-on-click={() => (this.???=???)}
+on-click={() => (this.???=???)}  e会自动传入作为最后一个参数
+onClick={[onClick1,onClick2]}
 ```
 
 - v-html:

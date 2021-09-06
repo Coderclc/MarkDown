@@ -832,5 +832,47 @@ v-is 值应为 JavaScript 字符串文本：
 
   - 目前的复用仅仅是组件的复用,碎片化使得理解和复杂的组件变得困难,选项的分离掩盖了潜在的逻辑问题,在实际开发中,我经常需要通过ctrl+d去找到对应的逻辑,不断的跳转相关代码的选项块,虽然我自认为很酷,但在无注释的情况下,一段时间后会变得难以理解
   - setup在beforeCreated 之前执行,props 解析之后
-
   - ref 因为基本数据类型的传递是值传递,很不安全,容易在某个地方的时候失去他的响应式
+  - 生命周期注册函数时,相同的函数只注册一次,可注册多个同名生命周期函数按顺序执行
+  - proxy 空对象或者空数组 reactive({}) reactive([]) 整个替换的响应式 vue是无法捕捉的
+  
+- 生命周期函数
+
+     - renderTracked  初次渲染追踪  传入event参数
+     - renderTriggered  渲染触发更新  传入event参数 ,有new old value值
+     - onErrorCaptured 捕获一个来自子孙组件的错误时被调用
+
+- provide/inject
+
+     ```
+      provide: {
+         todoLength: this.todos.length // 将会导致错误 'Cannot read property 'length' of undefined`
+       },
+       对象形式常量参数
+      provide() {
+         return {
+           todoLength: this.todos.length
+         }
+       },
+       函数使用this
+       
+     注入的如果是一个常量需要使用computed添加响应式(proxy对象不需要)
+     
+       provide() {
+         return {
+           todoLength: Vue.computed(() => this.todos.length)
+         }
+       }
+     ```
+
+     组合式provide
+
+     ```
+       provide('location', 'North Pole')
+         provide('geolocation', {
+           longitude: 90,
+           latitude: 135
+         })
+     ```
+
+     
