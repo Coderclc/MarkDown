@@ -865,14 +865,42 @@ v-is 值应为 JavaScript 字符串文本：
        }
      ```
 
-     组合式provide
+     组合式provide/inject
 
      ```
-       provide('location', 'North Pole')
+       provide('location', 'North Pole')  key -value
          provide('geolocation', {
            longitude: 90,
            latitude: 135
          })
+         
+     const userLocation = inject('location', 'The Universe')  // 第二个参数未可选的默认参数
+     const userGeolocation = inject('geolocation')
      ```
 
-     
+     添加响应式 ref,或者reactive包裹,直接provide提供 提供什么拿到什么...
+
+     改变也应该在提供者内做出修改, 提供一个方法改变即可
+
+     readonly 和原proxy或者refImp 不是相同的引用
+
+- 模板引用
+
+     - 模板中的ref  直接return 一个ref对象 demo ref='demo' 此处为字符串形式
+
+     - jsx 中为 ref = { ref} 变量形式, 没为什么记住就好了 
+
+     - v-for   
+
+          - ```
+               let itemRefs = [];
+                 const setItemRef = (el) => {
+                  itemRefs.push(el);
+                 };
+               ref= {itemRefs}
+               ref={setItemRef.bind(null, index)}  null 占位
+               ```
+
+- 渲染机制和优化
+
+     - dom的刷新更新很廉价,但是用js接触和计算dom,找到所需dom的成本很高,先更新virtual dom,在进行diff算法
