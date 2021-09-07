@@ -963,3 +963,75 @@ v-is 值应为 JavaScript 字符串文本：
        - 允许多个根组件但是要求开发者明确定义属性部分分布在哪里
 
      - 函数式组件
+
+          - `functional` attribute 在 `<template>` 中移除
+          - `listeners` 现在作为 `$attrs` 的一部分传递，可以将其删除
+
+     - 全局API
+
+          - 缺点 Vue.directive,Vue.component 类似的全局API容易污染其他测试用例,
+          - 3.x 将Vue.config 移到app.config
+          - ...主要是开发者注意
+
+     - 全局API Treeshaking
+
+          - ????
+
+     - 内联模板Attribute
+
+          - 移除
+
+     - key Attribute
+
+          - 2.x 建议在v-if等条件分支加key  3.x 会自动生成唯一key
+          - 2.x template 不能设置key,key需要设置在内部的节点   3.x  key 应该设置在template 标签上
+
+     - 按键修饰符
+
+          - 不再支持使用数字 (即键码) 作为 `v-on` 修饰符
+          - 不再支持 `config.keyCodes`
+
+     - 在prop中的default函数中访问this
+
+          - ```
+               import { inject } from 'vue'
+               
+               export default {
+                 props: {
+                   theme: {
+                     default (props) {
+                       // `props` 是传递给组件的原始值。
+                       // 在任何类型/默认强制转换之前
+                       // 也可以使用 `inject` 来访问注入的 property
+                       return inject('theme', 'default-theme')
+                     }
+                   }
+                 }
+               }
+               ```
+
+     - 渲染函数API
+
+          - h现在作为全局导入而不是从render中接收
+
+     - Slot 统一
+
+          - 移除 `this.$scopedSlots`
+
+     - 过渡的class名更改
+
+          - 修改了一些名字
+
+     - v-model
+
+          - 用于自定义组件,既非input select等 值为 modelValue 事件为 update:modelValue 
+          - .sync 移除
+          - 可以用v-models
+
+     - v-if 与 v-for 的优先级对比
+       - 现在if优先了
+
+     - v-bind 的合并行为
+       - 2.x 是单独的会覆盖object
+       - 3.x更改为后绑定的优先
+     - 
