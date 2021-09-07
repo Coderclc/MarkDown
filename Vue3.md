@@ -904,3 +904,62 @@ v-is 值应为 JavaScript 字符串文本：
 - 渲染机制和优化
 
      - dom的刷新更新很廉价,但是用js接触和计算dom,找到所需dom的成本很高,先更新virtual dom,在进行diff算法
+     
+- ts
+
+     - 要让 TypeScript 正确推断 Vue 组件选项中的类型，需要使用 `defineComponent` 全局方法定义组件：
+
+- 新特性
+
+     - background: v-bind(color);
+
+     - v-for 中的Ref 数组
+
+     - 异步组件
+
+          - defineAsyncComponent  由于函数式组件被定义为纯函数，因此异步组件的定义需要通过将其包装在新的 `defineAsyncComponent` 助手方法中来显式地定义：
+          - component` 选项现在被重命名为 `loader  高阶用法的component
+          - 接收一个返回promise 的函数且loader 函数不再接收resolve,reject
+
+     - attribute 强制行为 ???/ 看不懂
+
+     - 自定义指令
+
+          - 多了一些新钩子,旧钩子修改名称
+          - 目前多根节点指令会被忽略，并且会抛出一个警告。
+
+     - 自定义元素交互
+
+          - Vue.config.ignoredElements = ['plastic-button'] 不检查元素是否注册 2.x
+
+          - 3.x 此检查在模板编译期间执行,  使用生成步骤,vite或者webpack 配置
+
+          - ```js
+               使用动态模板编译 const app = Vue.createApp({})
+               app.config.isCustomElement = tag => tag === 'plastic-button'
+               ```
+
+     - data选项
+
+       - 必须要返回对象
+       - mixin 合并时,现在会浅层次的合并,
+
+     - 事件API
+
+       - $on,$off,$once 方法已移除,不推荐使用$bus,推荐使用mitt
+
+     - 过滤器filter
+
+       - 局部移除
+
+       - 全局的可以通过app.config.globalProperties.$filters 自定义方法
+
+       - ```
+         import { getCurrentInstance } from 'vue' internalInstance.appContext.config.globalProperties
+         ```
+
+     - 片段
+
+       - 允许多个根组件但是要求开发者明确定义属性部分分布在哪里
+
+     - 函数式组件
