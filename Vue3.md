@@ -51,6 +51,10 @@
 29. 直接ref生成refImp 打断了关联,生成新的ref
 30. shallowReactive 第一层响应式,内部怎么实现的??? (proxy 本身多层次的set就不会触发set,而是触发get
 31. )shallowRef 不处理对象,即内部不调用reactive,第一层替换,或者为基本类型还是有响应式
+32. toRaw 返回源对象,仍然有对象的关联,但没有响应式,两个概念,对象的地址相同,是否有响应
+33. ...toRefs() 模板直接访问key,但是若key不存在就会报错,但如果访问对象的中key即为undefined,和vue2的直接模板访问data不存在的数据和data上对象不存在的数据原理相同
+34. markRaw 返回一个对象本身使其不会转换成proxy,锁住这个对象,比如往一个proxy对象上添加一个很复杂的且不改变的对象,就可以通过markRaw 减少开销
+35. readonly 对象不能改变,但是源对象的改变还是会引起readonly对象的改变,即proxy和地址还在,toRaw是返回源对象,失去了响应式,地址仍然相同,markRaw是强制无法代理.
 
 
 
