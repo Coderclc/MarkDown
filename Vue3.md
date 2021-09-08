@@ -52,6 +52,8 @@
 30. shallowReactive 第一层响应式,内部怎么实现的??? (proxy 本身多层次的set就不会触发set,而是触发get
 31. )shallowRef 不处理对象,即内部不调用reactive,第一层替换,或者为基本类型还是有响应式
 
+
+
 # Vue3
 
 vue 2.2
@@ -1037,4 +1039,5 @@ v-is 值应为 JavaScript 字符串文本：
      - v-bind 的合并行为
        - 2.x 是单独的会覆盖object
        - 3.x更改为后绑定的优先
-     - 
+     
+     
