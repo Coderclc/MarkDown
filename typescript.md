@@ -1,39 +1,6 @@
-<script>
-TypeScript 类型思维
-微软开发的js超集语言
+export{} 导出一个对象,这个文件会被视为一个模块,有自己的作用域
 
-js缺点
-var 作用域
-无类型检测
-数组空间不连续
 
-代码开发err(写代码发现err{ide}->代码编译err{类型检测}->代码运行err->)->代码测试err->代码上线err
-
-无类型检测->对别人传的参数要进行各种判断,保证代码的健壮
-            使用别人的函数时,需要根据逻辑来判断传递的类型
-ts相比js  
-1.类型约束
-2.编译无须babel
-Babel 是一个 JavaScript 编译器
-Babel 是一个工具链，主要用于将 ECMAScript 2015+ 版本的代码转换为向后兼容的 JavaScript 语法，以便能够运行在当前和旧版本的浏览器或其他环境中。下面列出的是 Babel 能为你做的事情：
-
-一、变量声明方式
-var/let/const 标识符: 数据类型 = 赋值;
-string !=String  typescript的字符串类型  | js 的类
-二、const let  instead of var 
-三、变量类型推断,let msg = "hello"  msg = 20 err  第一步不用加类型判断,自动判断
-四、 name 为DOM typings 的一个环境变量  
-1.删除配置dom not recommend 2.export{} 导出一个对象,这个文件会被视为一个模块,有自己的作用域
-
-JS数据类型
-string number boolean : string|number|null|undefined|boolean
-let a: string|number = '123' a=123 可多重
-
-array类型
-const arr1: string[] = ['1','2']
-const arr1: (string|number|boolean)[] = ['clc',123,true]
-const arr2: Array<number> = [1,2,3,4]
-const arr2: Array<string|number> = ['1',2]
 
 TsLint 推荐上面 
 
@@ -52,8 +19,8 @@ const person = {
 const s1: symbol = Symbol("identity")
 const s2: symbol = Symbol("identity")
 const person = {
-  [s1]:"programmer",
-  [s2]:"teacher"
+[s1]:"programmer",
+[s2]:"teacher"
 }
 {Symbol(identity): "programmer", Symbol(identity): "teacher"}
 Object.keys(),Object.getOwnPropertyNames(),for in for of ,stringfy 都获取不到对象中的symol键
@@ -91,7 +58,6 @@ let v: voidv = undefined  v = null
 function return undefined null
 undefined null 为其他基础类型的子类型, config nullchecks 之后 num可设置为空
 
-
 never 类型
     函数时一个死循环,没出来 ,或者抛出异常,那么函数的类型为nerver
     const clc: (num: any)=>never = (num:string|number)=>{
@@ -109,16 +75,6 @@ let num: number = 123
 num = foo
 never 类型为所有类型的子类型   
 
-类型断言
-function getLength(target: number | string): number {
-  if ((<string/> target).length || (target as string).length === 0) {
-    return (target as string).length
-  } else {
-    return target.toString().length
-  }
-}
-两种形式  (<string/>variable)  
-(variable as string)  tslint 建议第二种
 
 
 TS函数

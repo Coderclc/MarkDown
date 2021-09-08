@@ -45,9 +45,10 @@
     - 似乎不需要deep:true就可以深度监听,(proxy对象不需要强制deep 函数返回对象需要deep,函数返回基本数据类型不需要多深都不需要
     - 无法监听对象的key这样监听.state.count 采用回调函数()=>state.count 
     - 无法监听到ref 中的proxy中的改变.需要通过.value直接监听proxy,或者开启deep
-
 26. Vue3生命周期 app相对于vm更轻量化, unmounted,beforeUnmount重命名,必须挂载才能执行初始化init,(vue2可以再执行完created之后再挂载)
 27. hooks 文件夹  useXXX.js
+
+
 
 # Vue3
 
@@ -1034,4 +1035,5 @@ v-is 值应为 JavaScript 字符串文本：
      - v-bind 的合并行为
        - 2.x 是单独的会覆盖object
        - 3.x更改为后绑定的优先
-     - 
+     
+     
