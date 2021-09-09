@@ -1043,5 +1043,227 @@ v-is 值应为 JavaScript 字符串文本：
      - v-bind 的合并行为
        - 2.x 是单独的会覆盖object
        - 3.x更改为后绑定的优先
-     
-     
+
+     - v-memo 3.2+
+
+       - ```html
+         v-memo="[valueA, valueB]"
+         如果依赖值与上次渲染相同,则整个子树的更新会被跳过,针对敏感场景优化
+         v-memo="[item.id === selected]"  第一次选中true,变为false ,选中的由false变为true ,当且仅当两者刷新
+         ```
+
+     - 每一个.vue文件标准sfc只允许包含一个script 但不包括\<script setup>
+
+       ```tsx
+       当你需要使用setup 语法糖且你需要name选项时你可能要这样写
+       <script lang="ts">
+         import { defineComponent } from 'vue';
+         export default defineComponent({
+           name: 'AButton',
+           inheritAttrs: false,
+         });
+       </script>
+       
+       <script lang="ts" setup>
+       </script>
+       ```
+
+     - 拆分src  .vue
+
+       ```
+       <template src="./template.html"></template>
+       <style src="./style.css"></style>
+       <script src="./script.js"></script>
+       ```
+
+     - 单文件组件
+
+       - script setup 语法糖
+
+       - 更少的内容,简介的代码
+
+       - 能够使用纯typescript声明props 和抛出事件
+
+       - 更好的运行性能,模板会编译成同一作用域的渲染函数,
+
+       - 更好的ide类型推断性能
+
+       - 组件,响应式变量,方法,任何导入都会暴露
+
+       - 递归组件通过文件名引用自己,要有name选项
+
+       - 命名空间组件
+
+         ```
+         script  setup 会自动导出一个default 
+         
+         export(import) { default as Demo1 }/Demo1 from './Demo1.vue'
+         export { default as Demo2 } from './Demo2.vue'
+         
+         不可以直接 export Demo1 from './Demo1.vue'
+         只能 export { default as Demo1 } from './Demo1.vue'
+         
+           import * as Demo from './components/index.js';
+           
+           <template>
+           <Demo.Demo1 />
+           <Demo.Demo2 />
+         </template>
+         ```
+
+       - defineProps 和defineEmits 定义
+
+         ```
+         const props = defineProps({
+           foo: String
+         })
+         
+         const emit = defineEmits(['change', 'delete'])
+         他们不需要导入且会随着 <script setup> 处理过程一同被被编译掉。
+         ```
+
+         传入到 `defineProps` 和 `defineEmits` 的选项会从 setup 中提升到模块的范围。也就时候在顶部,因此，传入的选项不能引用在 setup 范围中声明的局部变量。这样做会引起编译错误。但是，它*可以*引用导入的绑定，因为它们也在模块范围内。
+
+       - defineExpose script setup 和jsx 没有return 方法,属性的过程,所以需要通过expose 来导出属性,方法
+
+       - userSlots 和 useAttrs
+
+         **** 在模板中可以直接通过 $slots和 $attrs 访问
+
+         ```
+         <script setup>
+         import { useSlots, useAttrs } from 'vue'
+         
+         const slots = useSlots()
+         const attrs = useAttrs()
+         </script>
+         ```
+
+       - script 和scriptsetup 一起使用 
+
+         script 的内容在导入的时候执行, scriptsetup每一次new 实例都会执行
+
+       - 顶层await 
+
+         <script setup> 中可以使用顶层 await。结果代码会被编译成 async setup()：
+
+         但是必须配合Suspense使用,但这个玩意还是实验性阶段
+
+       - 仅限TyperScript 的功能
+
+       props 和 emits 都可以使用传递字面量类型的纯类型语法做为参数给 `defineProps` 和 `defineEmits` 来声明：
+
+```
+const props = defineProps<{
+  foo: string
+  bar?: number
+}>()
+
+const emit = defineEmits<{
+  (e: 'change', id: number): void
+  (e: 'update', value: string): void
+}>()
+
+不是String 而是string,String 运行时声明  , string 类型声明
+```
+
+同时使用会报错
+
+类型声明的不足之处在于没有给props提供默认值的方法,使用withDefaults编译器宏
+
+```
+interface Props {
+  msg?: string
+  labels?: string[]
+}
+
+const props = withDefaults(defineProps<Props>(), {
+  msg: 'hello',
+  labels: () => ['one', 'two']
+})
+```
+
+- 限制 没有Src导入
+
+style 特性
+
+在带有 `scoped` 的时候，父组件的样式将不会泄露到子组件当中。不过，子组件的根节点会同时被父组件的作用域样式和子组件的作用域样式影响。这是有意为之的，这样父组件就可以设置子组件根节点的样式，以达到调整布局的目的。所以父组件的section 会影响到子组件的section啊
+
+深度选择器 
+
+:deep()
+
+插槽选择器
+
+:slotted
+
+:global 全局选择器
+
+```
+<style>
+/* global styles */
+</style>
+
+<style scoped>
+/* local styles */
+</style>
+
+混用
+```
+
+style moudle
+
+```
+<template>
+  <p :class="$style.red">
+    This should be red
+  </p>
+</template>
+
+<style module>
+.red {
+  color: red;
+}
+</style>
+```
+
+```
+<template>
+  <p :class="classes.red">red</p>
+</template>
+
+<style module="classes">
+.red {
+  color: red;
+}
+</style> 
+自定义名称
+
+import {useCssModule} from 'vue'
+  console.log(useCssModule('classes').red)
+  和组合式api一起使用
+```
+
+状态驱动
+
+```vue
+<style>
+.text {
+  color: v-bind(color);
+}
+</style>
+好用 ,内部原理为css 变量  var()
+
+
+const theme = {
+  color: 'red'
+}
+
+<style scoped>
+p {
+  color: v-bind('theme.color');
+}
+</style>
+不用引号也可以,但是编辑器会报错
+
+```

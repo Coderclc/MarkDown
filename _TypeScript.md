@@ -53,13 +53,15 @@
   ```typescript
   function hello(): void {
       alert("Hello Runoob");
+      return null || undefined 
   }
   
   const hello = (): void => {
     alert("Hello Runoob");
+      return null || undefined 
   };
   
-  // 无返回值
+  // 无返回值 或者返回 return null || undefined 
   ```
 
 - null类型
@@ -110,19 +112,19 @@
   1. const user: any = { name:"chenlicheng",age:18 }
   2 user['name']
   3 interface  真正的用法
-  4
+  4 断言 (user as any).name  (<any>user).age
   ```
 
-- 多类型
+- 联合类型
 
   ```typescript
   const foo: number|string
   
   const arr: (number|string)[]
   const arr: Array<number|string> 
+        
+  const arr: Array<number>|Array<String> = []
   ```
-
-
 
 
 
@@ -131,8 +133,6 @@
 ```typescript
 var [变量名] : [类型] = 值;
 ```
-
-
 
 ### 类型断言
 
@@ -167,4 +167,217 @@ foo = 233; // Type 'number' is not assignable to type 'string'.ts(2322)
 // 没有给出类型的时候,编译器会利用类型推断推出类型
 // 若不能推断默认为any
 ```
+
+### 变量作用域
+
+- 全局作用域
+- 局部作用域
+- 类作用域
+
+
+
+## 运算符
+
+- 算术
+
+  ```
+  + - * / % ++ --
+  ```
+
+- 逻辑
+
+  ```
+  && || !
+  ```
+
+- 关系
+
+  ```
+  == != > < >= <=
+  ```
+
+- 按位
+
+  ```
+  & | ~ ^ << >> >>>
+  ```
+
+- 赋值
+
+  ```
+  = += -= *= /=
+  ```
+
+- 三元/条件
+
+  ```
+  ()?():()
+  ```
+
+- 字符串
+
+  ```
+  - +
+  ```
+
+- 类型
+
+  ```
+  typeof instanceof
+  ```
+
+
+
+## 条件语句
+
+- if
+- if else
+- if else-if else
+- switch case
+
+
+
+## 循环
+
+```
+for(init;condition;increment){}
+```
+
+```
+for(var i in j)
+```
+
+```
+for(var i of j)
+```
+
+```
+forEach every some...
+```
+
+```
+while(condition){}
+```
+
+```
+do{}while(condition)
+```
+
+```
+break // 能有效提升循环性能
+```
+
+```
+continue
+```
+
+``` 
+for(;;){} while(true){} 无线循环
+```
+
+
+
+## 函数
+
+- 参数个数,类型限制,返回值限制
+
+  ```
+  function add(x: number, y: number): number {
+  	return x + y;
+  }
+  ```
+
+- 可选参数必须跟在必需参数后面,参数不能同时设置为可选和默认。
+
+  ```
+  function add(x: number = 100, y?: number): number {
+      return x + y;
+  } 
+  ```
+
+- 剩余参数
+
+  ```
+  function foo(...arg: Array<any>){}
+  ```
+
+- 函数定义
+
+  ```
+  function foo (){}
+  ```
+
+- 匿名函数,将匿名函数赋值给一个变量
+
+  ```
+  const foo = ()=>{}
+  ```
+
+- 构造函数
+
+  ```
+  var myFunction = new Function("a", "b", "return a * b"); 
+  var x = myFunction(4, 3); 
+  console.log(x);
+  ```
+
+- 递归函数
+
+  ```
+  function factorial(number) {
+      if (number <= 0) {         // 停止执行
+          return 1; 
+      } else {     
+          return (number * factorial(number - 1));     // 调用自身
+      } 
+  }; 
+  console.log(factorial(6));      // 输出 720
+  ```
+
+- 函数重载
+
+  ```
+  function disp(s1:string):void; 
+  function disp(n1:number,s1:string):void; 
+   
+  function disp(x:any,y?:any):void { 
+      console.log(x); 
+      console.log(y); 
+  } 
+  disp("abc") 
+  disp(1,"xyz");
+  
+  // 如果参数类型不同，则参数类型应设置为 any。
+  // 参数数量不同你可以将不同的参数设置为可选。
+  ```
+
+
+
+## Map
+
+```
+let myMap = new Map([
+  ["key1", "value1"],
+  ["key2", "value2"]
+]); 
+```
+
+- map.clear() – 移除 Map 对象的所有键/值对 。
+- map.set() – 设置键值对，返回该 Map 对象。
+- map.get() – 返回键对应的值，如果不存在，则返回 undefined。
+- map.has() – 返回一个布尔值，用于判断 Map 中是否包含键对应的值。
+- map.delete() – 删除 Map 中的元素，删除成功返回 true，失败返回 false。
+- map.size – 返回 Map 对象键/值对的数量。
+- map.keys() - 返回一个 Iterator 对象， 包含了 Map 对象中每个元素的键 。
+- map.values() – 返回一个新的Iterator对象，包含了Map对象中每个元素的值 。
+
+```
+for (let i of Iterator) or Iterator.next()
+```
+
+
+
+## 元组
+
+
 
