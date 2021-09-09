@@ -4,57 +4,161 @@
    - mono 单个,repo repository仓库
    - 多个包之间相互独立,有自己的功能逻辑,单元测试,同一个仓库下方便管理
    - 模块划分清晰,可维护性,可拓展性强
+   
 2. Vue3改用es6的Proxy实现劫持
    - Vue2.x使用的Object.defineProperty来劫持obj的getter和setter,缺陷是设置和删除无法劫持,所以用相应的hack方法api$delete,$set,
+   
 3. 删除了一些不必要的api
    - 删除了$on,$off,$once,
    - 移除了filter,内联模板inline-template(在父组件中声明的数据和子组件中声明的数据两个都可以渲染,这反而是缺点)等
+   
 4. 编译方面的优化
    - 生成block tree ,slot编译优化,diff算法优化,打包大小减少41%,初次渲染快了55%,更新渲染快133%,内存减少54%
    - 冲重写虚拟DOM的实现和实现更好的tree-shaking
+   
 5. 由Options API到Composition Api
    - 在Vue2.x通过Options API来描述组件对象,包括 data,props,methods,computed,生命周期等选项,问题在于多个逻辑可能实在不同的地方,跳来跳去?
    - composition API 可以将相关联的代码放到同一行进行处理,而不需要在多个Options之间寻找
+   
 6. Hooks 函数增加代码的复用性
    - Vue2.x使用mixins来共享组件逻辑,缺陷在于mixins也使由Options组成的,多个mixins会存在命名冲突的问题,
    - 3.x可以通过hook函数,将一部分独立的逻辑抽取出去,并且还能做到是响应式的![script](C:\Users\Coderclc\Documents\MarkDown\images\script.webp)
+   
 7. 拥抱ts
+
 8. vite 上来就server ready 其次请求再分析依赖
+
 9. const app = createApp(App) 更轻了
+
 10. setup
     - 新的配置项 是一个在所有生命周期之前的函数(所以没有this)
     - 返回对象则用于模板中使用,或者直接返回render函数()=>(\<section>\</section>)
     - 尽量不要混这些,vue2.x中可以访问setup中的属性和方法,反过来不行,没有this
     - 如果重名,setup优先 object.assign
     - 不想写根就用<></>来写
+    
 11. refImpl reference implement 引用实现 在模板中自动展开.value ,render不会自动展开返回引用实现的实例
+
 12. ref 代理基本数据类型用的object.define,引用用的proxy,reactive 代理用的proxy, ref代理对象其实就是使用了ref(reactive())
+
 13. ref中的普通对象会被转换成proxy,通过.value访问,
+
 14. 读取proxy key中的 refImpl 会自动展开value,index值不会自动展开
+
 15. ref(ref()) reactive(reactive()) 返回自身  ref(reactive()) reactive(ref())返回ref 
+
 16. delete 这个关键字是有返回值的,比如删除无配置不可枚举的对象key值会返回false
+
 17. Object,defineProperty can't redefine  Reflect.defineProperty可以
+
 18. Reflect.defineProperty有返回布尔值表示代理的成功与否
+
 19. this.$slots.default 是一个vnode 所以用于render而非template
+
 20. setup有两个参数,第一个是props选项声明过的参数.第二个是ctx 包含{attrs(未声明props),emit,slots,expose}
+
 21. 似乎只支持 onSubmit 小驼峰写法了监听事件
+
 22. vue3ref  通过 ref() 生成的变量绑定在模板或者渲染函数中的ref 然后在onMounted 生命周期即可获得组件实例的cpn.value的Proxy 对象 ,而setup中的参数 expose 可以将ref获取到的实例对象改为expose暴露出的对象
+
 23. computed 返回也是一个引用实现实例对象,且computed,和watch只能捕获到响应式数据的变化
+
 24. watch 监听多个可以多次调用或者传入数组,接收到的新值旧值也是数组
+
 25. - 引用数据类型新旧值相同的地址(vue2就有这个问题),
     - 似乎不需要deep:true就可以深度监听,(proxy对象不需要强制deep 函数返回对象需要deep,函数返回基本数据类型不需要多深都不需要
     - 无法监听对象的key这样监听.state.count 采用回调函数()=>state.count 
     - 无法监听到ref 中的proxy中的改变.需要通过.value直接监听proxy,或者开启deep
+    
 26. Vue3生命周期 app相对于vm更轻量化, unmounted,beforeUnmount重命名,必须挂载才能执行初始化init,(vue2可以再执行完created之后再挂载)
+
 27. hooks 文件夹  useXXX.js
+
 28. 直接return 响应式对象 或者return{...toRefs(响应式对象)},对象解构打断响应式是proxy的锅
+
 29. 直接ref生成refImp 打断了关联,生成新的ref
+
 30. shallowReactive 第一层响应式,内部怎么实现的??? (proxy 本身多层次的set就不会触发set,而是触发get
+
 31. )shallowRef 不处理对象,即内部不调用reactive,第一层替换,或者为基本类型还是有响应式
+
 32. toRaw 返回源对象,仍然有对象的关联,但没有响应式,两个概念,对象的地址相同,是否有响应
+
 33. ...toRefs() 模板直接访问key,但是若key不存在就会报错,但如果访问对象的中key即为undefined,和vue2的直接模板访问data不存在的数据和data上对象不存在的数据原理相同
+
 34. markRaw 返回一个对象本身使其不会转换成proxy,锁住这个对象,比如往一个proxy对象上添加一个很复杂的且不改变的对象,就可以通过markRaw 减少开销
+
 35. readonly 对象不能改变,但是源对象的改变还是会引起readonly对象的改变,即proxy和地址还在,toRaw是返回源对象,失去了响应式,地址仍然相同,markRaw是强制无法代理.
+
+36. ```
+          const useDebouncedRef = () => { // value也可以是形参
+            let value
+            return customRef((track, trigger) => {
+              return {
+                get() {
+                  console.log('get')
+                  track()
+                  return value
+                },
+                set(newVal) {
+                  console.log('set')
+                },
+              }
+            })
+          }
+          和computed的区别就是少了 track, trigger
+          用一个变量来接收,展示那个变量即可,而customRef而已做到只需一个变量
+          
+    ```
+
+37. 同步组件,等待所有组件加载完再渲染,异步组件,先加载的先渲染,但是就导致了一个新问题,即页面空白期
+
+    ```
+    用suspense
+    <suspense>
+    	<template v-slot:default >
+    	</template>
+    	<template v-slot:fallback >
+    	</template>
+    </suspense>
+    ```
+
+38. ```
+    <script setup>
+      await new  Promise((resolve) => {
+        setTimeout(() => {
+          resolve('')
+        }, 3000)
+      })
+    </script>
+    <template>
+      <h1>
+        demo
+      </h1>
+    </template>
+    在setup顶层使用await 代码会被编译成 async setup()：
+    
+    再配合 suspense 和 defineAsyncComponent s
+    <script setup>
+      import { defineAsyncComponent } from 'vue'
+      const Demo = defineAsyncComponent(() => import('./Demo.vue'))
+    </script>
+    
+    <template>
+      <suspense>
+        <template #default>
+          <Demo />
+        </template>
+        <template #fallback>
+          <h1>
+            loading...加载中
+          </h1>
+        </template>
+      </suspense>
+    </template>
+    ```
+
+    
 
 
 
