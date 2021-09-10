@@ -118,7 +118,7 @@
 
 - 图片白边 1.设置父元素字体大小为 0 副作用 子元素字体消失,设置都设置不出来 2.设置图片为块盒 3.修改对齐的基线
 
-- 参考线-深入理解字体 通常为 5 根参考线 text top/ascent 顶线 super 上基线 baseline 基线 sub 下基线 text bottom,descent 底线
+- 参考线-深入理解字体 通常为 5 根参考线 text top/ascent 顶线  上基线 baseline 基线 sub 下基线 text bottom,descent 底线
   平时设置 font-side 字体大小是设置的文字相对大小,实际文字大小是顶线到底线的距离
 
 - 堆叠上下文  stack context 决定了 z 轴的规定顺序

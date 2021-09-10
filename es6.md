@@ -85,7 +85,12 @@ const clc = {
     console.log(super.flag);
     console.log(this.flag);
   }
-}clc.fn()
+}
+
+clc.__proto__.flag = "我在proto中"
+
+clc.fn()
+
 2.super != Object.getPrototypeOf(this) 获取这个对象的原型对象
 虽然都是指向原型对象,但此时,super的this为包含super的this
 Object.getPrototypeOf(this) 原型对象的this,为原型对象

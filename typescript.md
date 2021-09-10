@@ -1,17 +1,4 @@
-export{} 导出一个对象,这个文件会被视为一个模块,有自己的作用域
 
-
-
-TsLint 推荐上面 
-
-object 类型
-const info: object = {
-  name:"clc",
-  age:20
-}
-但是此时访问info.name会报错,所以不加object,让其自动类型推断
-
-symbol 类型
 const person = {
   identity:"programmer",
   identity:"teacher"
@@ -19,6 +6,7 @@ const person = {
 const s1: symbol = Symbol("identity")
 const s2: symbol = Symbol("identity")
 const person = {
+
 [s1]:"programmer",
 [s2]:"teacher"
 }
@@ -29,51 +17,13 @@ Object.keys(),Object.getOwnPropertyNames(),for in for of ,stringfy 都获取不�
 Symbol.for()  能够创建相同的 s1 == s2
 Symbol.keyFor() 找全局注册的字符串
 
-numm and undefined
-const n: null = null
-const u: undefined = undefined
 
 
-Typescript 数据类型
- enum 枚举类型  处理非数值的数据
-      enum DIRECTION {EAST,SOUTH, WEST,NORTH}
-      const d1: DIRECTION = DIRECTION.EAST
-      const d2: DIRECTION = DIRECTION.WEST
-      默认的值是从 0开始 0,1,2,3,如果EAST = 10 ,SOUTH = 11
-      也可以通过值访问名称  DIRECTION[VALUE]
-tuple 元组类型  原来放不同类型的数组,并且定死了长度,与python中的不同
-      const tInfo: [string,number,number] =["clc",18,18]
-      const item1 = tInfo[0] "clc" 并且知道clc为string
-      const arr2: Array<string|number> = ['1',2]
-      const item2 = arr2[2] 2 但是类型丢失
-      当添加越界的元素时，它的类型会被限制为元组中每个类型的联合类型：string|number
-any 类型
-    let a: any = "why"
-      a = 12  可发生类型变换
-    const aarr: any[] = ['1',2]
-    const aarr: Array<any> = [1, '2']
 
-void 类型
-let v: voidv = undefined  v = null
-function return undefined null
-undefined null 为其他基础类型的子类型, config nullchecks 之后 num可设置为空
 
-never 类型
-    函数时一个死循环,没出来 ,或者抛出异常,那么函数的类型为nerver
-    const clc: (num: any)=>never = (num:string|number)=>{
-    while(true){
-      console.log(123);
-    }
-    }
-    const clc: () => never = ()=>{
-   throw new Error('err')
-    }
- let foo = (()=>{
-  throw new Error('error')
-})()
-let num: number = 123
-num = foo
-never 类型为所有类型的子类型   
+
+
+
 
 
 

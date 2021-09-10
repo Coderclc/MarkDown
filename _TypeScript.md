@@ -377,7 +377,309 @@ for (let i of Iterator) or Iterator.next()
 
 
 
-## 元组
+## 接口
+
+- 接口一般首字母大写。tslint建议加上I前缀, 
+
+  ```
+  interface IPerson {
+    firstName: string
+    lastName: string
+    sayHi: () => string
+    run(): number
+  }
+  // 属性不能少,不能溢出
+  ```
+
+- 可选属性和只读属性
+
+  ```
+  interface Person {
+    name?: string,
+    readonly age: number,
+    run?(): void,
+  }
+  const why: Person = {
+    // name 键值对缺失不会报错
+    age: 18
+  }
+  why.run&&why.run() //判断函数执行
+  why.age++  //修改age报错 Cannot assign to 'age' because it is a read-only property.
+  ```
+
+- 任意类型
+
+  ```
+  interface Person {
+    name: string,
+    age?: number,
+    [index: string]: any
+  }
+  
+  const why: Person = {
+    name: 'why',
+    age: 18,
+    gender:'female'
+  }
+  
+  ```
+
+  - index 只是一个占位符
+  - 任意类型可以少,可以溢出
+  - 任意类型的类型必须包含其余属性的类型
+
+- 联合类型和接口
+
+  ```
+  interface IRunOptions { 
+    program:string; 
+    commandline:string[]|string|(()=>string); 
+  } 
+  ```
+
+- 接口和数组
+
+  ```
+  interface INamelist { 
+    [index:number]:string 
+  } 
+  
+  interface ages { 
+     [key:string]:number   // 伪数组
+  } 
+  // 索引值可以是数字或字符串
+  ```
+
+- 单接口继承
+
+  ```
+  interface Person {
+    age: number
+  }
+  
+  interface Musician extends Person {
+    instrument: string
+  }
+  ```
+
+- 多接口继承
+
+  ```
+  interface IParent1 { 
+    v1:number 
+  } 
+  
+  interface IParent2 { 
+    v2:number 
+  } 
+  
+  interface Child extends IParent1, IParent2 { } 
+  // 逗号分隔符分割
+  ```
+
+- 面向接口和类型断言
+
+  ```
+  interface IUser {
+    name: string
+    age: number
+  }
+  
+  const user: IUser = {} // error  issing the following properties
+  
+  const user = {} as IUser // true
+  ```
+
+- 接口与函数
+
+  ```
+  const foo: (name: string, age: number) => string = (name: string, age: number): string => {
+    return `name : ${name}, age: ${age}`
+  }
+  // 给变量foo定义了函数类型,并且把一个定义了类型的匿名函数赋值给他
+  
+  // 定义两个接口
+  interface IUser {
+    name: string,
+    age: number,
+  }
+  
+  interface IUserFunc {
+    (user:IUser):string
+  }
+  // or
+  type IUserFunc = (user: IUser) => string
+  
+  // next
+  const foo: IUserFunc = user => {
+    return `name : ${user.name}, age: ${user.age}`
+  }
+  ```
+
+- 注意区别
+
+  ```
+  interface IUserFunc {
+    (): string
+  }
+  // 一个函数,函数返回值为string
+  
+  interface IUserFunc {
+    foo(): string
+  }
+  // 一个对象,对象里有foo这个函数,返回值为string
+  ```
+
+- 类实现接口
+
+  ```
+  interface Skr {
+    name: string,
+    age: number,
+    rap():void
+  }
+  class Person {
+    name
+    constructor(name: string) {
+      this.name = name
+    }
+  }
+  class Rapper extends Person implements Skr{
+    age
+    constructor(name: string, age: number) {
+      super(name)
+      this.age = age
+    }
+    rap(){
+      console.log('I can sing and dance tap');
+    }
+  }
+  // constructor 还是需要定义类型限制,否则仍然无法限制
+  ```
 
 
 
+## 类
+
+### 类的声明
+
+```
+class User {
+  name
+  age
+  gender: string = 'male'
+  constructor(name: string, age: number, gender?: string) {
+    this.name = name
+    this.age = age
+    gender && (this.gender = gender)
+  }
+  run(): void {}
+}
+```
+
+### 类的继承
+
+子类除了不能继承父类的私有成员(方法和属性)和构造函数，其他的都可以继承。一次只能继承一个,但可以多重继承
+
+```
+class User {
+  name
+  age
+  constructor(name: string, age: number) {
+    this.name = name
+    this.age = age
+  }
+  run(): void {}
+}
+
+class Student extends User {
+  gender
+  phone
+  constructor(name: string, age: number, gender: string, phone: number) {
+    super(name, age)
+    this.gender = gender
+    this.phone = phone
+  }
+}
+```
+
+### 继承类的重写
+
+```
+class PrinterClass { 
+   doPrint():void {
+      console.log("父类的 doPrint() 方法。") 
+   } 
+} 
+ 
+class StringPrinter extends PrinterClass { 
+   doPrint():void { 
+      super.doPrint() // 调用父类的函数
+      console.log("子类的 doPrint()方法。")
+   } 
+}
+```
+
+### 关键字
+
+- static  定义方法或属性在类名本质是一个函数上
+
+- readonly 只读属性
+- public 默认为公有的
+- private 只能在定义类中使用
+- protected 只能在子父类中访问
+
+
+
+## 对象
+
+- 在typescript中往对象身上添加属性会编译错误,因为ts对象必须是特定类型的实例,
+
+  ```
+  var sites = {
+      site1: "Runoob",
+      site2: "Google",
+      sayHello: function () { } // 类型模板
+  };
+  sites.sayHello = function () {
+      console.log("hello " + sites.site1);
+  };
+  sites.sayHello();
+  // 提前声明类型模板
+  // 面向一个字符字符索引接口
+  ```
+
+
+
+## 命名空间
+
+```
+namespace SomeNameSpaceName {
+  export interface ISomeInterfaceName {}
+  export class SomeClassName {}
+}
+
+SomeNameSpaceName.SomeClassName
+
+export default SomeNameSpaceName
+or
+export namespace SomeNameSpaceName {
+  export interface ISomeInterfaceName {}
+  export class SomeClassName {}
+}
+```
+
+
+
+## 声明文件
+
+- 在ts 中使用第三方的js,无法使用ts 的类型检查功能
+
+  ```
+  declare var jQuery: (selector: string) => any;
+  
+  jQuery('#foo');
+  使用 declare 关键字来定义它的类型，帮助 TypeScript 判断我们传入的参数类型对不对
+  ```
+
+- 声明文件以.d.ts 结尾
