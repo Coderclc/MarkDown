@@ -579,7 +579,7 @@ class User {
 
 ### 类的继承
 
-子类除了不能继承父类的私有成员(方法和属性)和构造函数，其他的都可以继承。一次只能继承一个,但可以多重继承
+子类除了不能继承父类的私有成员(方法和属性)和构造函数，其他都可以继承。一次只能继承一个,但可以多重继承
 
 ```
 class User {
@@ -683,3 +683,158 @@ export namespace SomeNameSpaceName {
   ```
 
 - 声明文件以.d.ts 结尾
+
+
+
+## 泛型
+
+- 不预先指定具体类型,而在使用的时候再指定
+
+  ```
+  export {}
+  type IGetFunc = (...args: Array<number|string>)=>(number|string)[]
+  
+  let getArr:IGetFunc
+  
+  getArr = (...args)=>{
+    const arr = []
+    arr.push(...args)
+    return arr
+  }
+  
+  getArr('foo','bar').forEach(item=>{
+    item.length // error Property 'length' does not exist on type 'number'.
+  })
+  // 使用类型断言,函数重载,any有些许本末倒置
+  ```
+
+- 声明时声明\<T>,调用的时候指定类型
+
+  ```
+  type IGetFunc = <T>(...args: Array<T>)=>T[]
+  
+  let getArr:IGetFunc
+  
+  getArr = (...args)=>{
+    const arr = []
+    arr.push(...args)
+    return arr
+  }
+  
+  getArr<string>('foo','bar').forEach(item=>{
+    item.length 
+  })
+  ```
+
+- 不手动指定则类型自动推论
+
+  ```
+  getArr('foo','bar').forEach(item=>{
+    item.toFixed(1) // error
+    // Property 'toFixed' does not exist on type 'string'. Did you mean 'fixed'
+  })
+  ```
+
+- 泛型参数可指定多个
+
+  ```
+  type Func = <T, U>(x: T, y: U) => [U, T]
+  let swap: Func = (x, y) => {
+    return [y,x]
+  }
+  swap(1,'1'); // ['1',1]
+  ```
+
+- 泛型约束
+
+  ```
+  type IFunc =<T extends string>(x:T)=>T
+  
+  const foo:IFunc = x=>{
+    x.length // right T 默认为any,无法访问 sting.length
+    return x 
+  }
+  
+  foo('foo').length
+  ```
+
+- 泛型继承接口
+
+  ```
+  interface Bar {
+    length: number
+  }
+  function foo<T extends Bar>(x: T): T {
+    x.length
+    return x
+  }
+  foo('foo') // ✔
+  foo({ length: 233 }) // ✔
+  // 限制了T需拥有length这个属性,而非T为一个对象
+  ```
+
+- 多个泛型参数之间的约束
+
+  ```
+  function foo<T, U extends keyof T>(obj: T, attr: U): T {
+    console.log(obj[attr]);
+    return obj
+  }
+  const bar = {
+    name: 'bar'
+  }
+  foo(bar, 'name')
+  foo(bar, 'age') // error 类型“"age"”的参数不能赋给类型“"name"”的参数。
+  keyof为ts在泛型定义时独有的关键字
+  ```
+
+- 泛型T默认值
+
+  ```
+  function foo<T = number>(x: T): T {
+    return x
+  }
+  不指定或者无法推测时,将会使用默认值
+  ```
+
+- 泛型与接口
+
+  - 形参前,或接口名后
+
+  ```
+  interface Arr {
+    <T>(...args: T[]): Array<T>
+  }
+  or
+  interface Arr<T>{
+    (...args: T[]) :Array<T>
+    attr:T
+  }
+  // 第二种在面向时需手动定义泛型类型
+  ```
+
+  ```
+  type Arr = <T>(...args: T[]) => Array<T>
+  or
+  type Arr<T> = (...args: T[]) => Array<T>
+  ```
+
+- 泛型与类
+
+  ```tsx
+  class Person<T = string> {
+    name: T
+    constructor(name: T) {
+      this.name = name
+    }
+    run(): T {
+      const foo: T = this.name
+      return foo
+    }
+  }
+  const why = new Person<string>('why')
+  ```
+
+
+
+## 装饰器
