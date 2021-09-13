@@ -339,7 +339,6 @@ for(;;){} while(true){} 无线循环
   ```
   function disp(s1:string):void; 
   function disp(n1:number,s1:string):void; 
-   
   function disp(x:any,y?:any):void { 
       console.log(x); 
       console.log(y); 
@@ -646,7 +645,7 @@ class StringPrinter extends PrinterClass {
   };
   sites.sayHello();
   // 提前声明类型模板
-  // 面向一个字符字符索引接口
+  // 面向一个字符索引接口
   ```
 
 
@@ -838,3 +837,154 @@ export namespace SomeNameSpaceName {
 
 
 ## 装饰器
+
+- tsconfig.json
+
+  ```
+  {
+      "compilerOptions": {
+          "target": "ES5",
+          "experimentalDecorators": true
+      }
+  }
+  ```
+
+- *装饰器*是一种特殊类型的声明，它能够被附加到[类声明](https://www.tslang.cn/docs/handbook/decorators.html#class-decorators)，[方法](https://www.tslang.cn/docs/handbook/decorators.html#method-decorators)， [访问符](https://www.tslang.cn/docs/handbook/decorators.html#accessor-decorators)，[属性](https://www.tslang.cn/docs/handbook/decorators.html#property-decorators)或[参数](https://www.tslang.cn/docs/handbook/decorators.html#parameter-decorators)上。 
+
+- 装饰器使用 `@expression`这种形式，`expression`求值后必须为一个函数，它会在运行时被调用，被装饰的声明信息做为参数传入。
+
+- *装饰器工厂*就是一个简单的函数，它返回一个表达式，以供装饰器在运行时调用。
+
+  ```
+  function color(value: string) { // 这是一个装饰器工厂
+      return function (target) { //  这是装饰器
+          // do something with "target" and "value"...
+      }
+  }
+  ```
+
+- 多个装饰器声明
+
+  1. 由上至下依次对装饰器表达式求值。
+  2. 求值的结果会被当作函数，由下至上依次调用。
+
+- 不同声明装饰器的顺序应用
+  1. *参数装饰器*，然后依次是*方法装饰器*，*访问符装饰器*，或*属性装饰器*应用到每个实例成员。
+  2. *参数装饰器*，然后依次是*方法装饰器*，*访问符装饰器*，或*属性装饰器*应用到每个静态成员。
+  3. *参数装饰器*应用到构造函数。
+  4. *类装饰器*应用到类。
+- 装饰器不能用在声明文件中( `.d.ts`)，也不能用在任何外部上下文中（比如`declare`的类）。
+
+### 类装饰器
+
+类的构造函数作为其唯一的参数。
+
+```
+function sealed(constructor: Function) {
+    Object.seal(constructor);
+    Object.seal(constructor.prototype);
+}
+// Object.seal()方法封闭一个对象，阻止添加新属性并将所有现有属性标记为不可配置。当前属性的值只要原来是可写的就可以改变。
+
+@sealed
+class Greeter  {}
+```
+
+### 方法装饰器
+
+方法装饰器表达式会在运行时当作函数被调用，传入下列3个参数：
+
+1. 对于静态成员来说是类的构造函数，对于实例成员是类的原型对象。
+2. 成员的名字。
+3. 成员的*属性描述符*。
+
+### 访问器装饰器
+
+不允许同时装饰一个成员的`get`和`set`访问器.成员的所有装饰的必须应用在文档顺序的第一个访问器上。既get
+
+访问器装饰器表达式会在运行时当作函数被调用，传入下列3个参数：
+
+1. 对于静态成员来说是类的构造函数，对于实例成员是类的原型对象。
+2. 成员的名字。
+3. 成员的*属性描述符*。
+
+### 属性装饰器
+
+属性装饰器表达式会在运行时当作函数被调用，传入下列2个参数：
+
+1. 对于静态成员来说是类的构造函数，对于实例成员是类的原型对象。
+2. 成员的名字。
+
+### 参数装饰器
+
+### 元数据
+
+
+
+## 三斜线指令
+
+- 三斜线指令是包含单个XML标签的单行注释。 注释的内容会做为编译器指令使用。
+
+- 三斜线指令*仅*可放在包含它的文件的最顶端。 一个三斜线指令的前面只能出现单行或多行注释，这包括其它的三斜线指令。 如果它们出现在一个语句或声明之后，那么它们会被当做普通的单行注释，并且不具有特殊的涵义。
+
+  ```
+  /// <reference path="..." />指令是三斜线指令中最常见的一种。 它用于声明文件间的 依赖。
+  ```
+
+  ```
+  /// <reference types="..." />
+  例如，把 /// <reference types="node" />引入到声明文件，表明这个文件使用了 @types/node/index.d.ts里面声明的名字； 并且，这个包需要在编译阶段与声明文件一起被包含进来。
+  ```
+
+  
+
+## Note
+
+- tsc 指定文件,编译器不会去查找tsconfig.json
+
+- 使用esModule导入导出替代require
+
+- strictNullChecks
+
+  当开启了严格的null检查时,必须手动指定可能为null或者undefined的情况
+
+  且`null`和`undefined`只能赋值给`void`和它们各自。(4.3不能赋予给void)
+
+  ```
+   var foo: string[] | null;
+  
+  foo.length;  // error - 'foo' is possibly 'null'
+  
+  foo!.length; // okay - 'foo!' just has type 'string[]'
+  
+  // 假设有一个值TypeScript认为可以为null或undefined，但是你更清楚它的类型，你可以使用!后缀。
+  ```
+
+- (大写的o)在其他语言,Object 类型有着近乎any的作用,他允许你赋予任何值,但是你不能访问它上面的方法,即时他真的有
+
+  ```
+  let prettySure: Object = 4;
+  console.log(prettySure);
+  
+  prettySure.toFixed(); // Error: Property 'toFixed' doesn't exist on type 'Object'.
+  ```
+
+- (小写的o)`object`表示非原始类型，也就是除`number`，`string`，`boolean`，`symbol`，`null`或`undefined`之外的类型。
+
+- 当你在TypeScript里使用JSX时，只有 `as`语法断言是被允许的。
+
+- ```
+  const foo = (user: { name: string }) => {
+    console.log(user)
+  }
+  声明foo的传入对象有一个name key type is string
+  
+  const foo = ( { name: {foo} }) => {
+    console.log(foo)
+  }
+  解构
+  ```
+
+- import type ,用于导入.d.ts声明文件的接口,类型等
+
+  
