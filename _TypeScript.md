@@ -168,6 +168,22 @@ foo = 233; // Type 'number' is not assignable to type 'string'.ts(2322)
 // 若不能推断默认为any
 ```
 
+### 类型别名
+
+```
+type Name = string;
+type NameResolver = () => string;
+type NameOrResolver = Name | NameResolver;
+type EventNames = 'click' | 'scroll' | 'mousemove'; //还能面向具体值
+function getName(n: NameOrResolver): Name {
+    if (typeof n === 'string') {
+        return n;
+    } else {
+        return n();
+    }
+}
+```
+
 ### 变量作用域
 
 - 全局作用域
@@ -613,6 +629,7 @@ class PrinterClass {
  
 class StringPrinter extends PrinterClass { 
    doPrint():void { 
+   	  this.doPrint()  //  调用自身的doPrint  Maximum call stack size exceeded 
       super.doPrint() // 调用父类的函数
       console.log("子类的 doPrint()方法。")
    } 
@@ -683,7 +700,238 @@ export namespace SomeNameSpaceName {
 
 - 声明文件以.d.ts 结尾
 
+### 结构
 
+### 举例
+
+- 全局变量
+
+  ```
+  declare let foo: number;
+  ```
+
+- 全局函数
+
+  ```
+  declare function greet(greeting: string): void
+  declare const greet: (greeting: string) => void
+  ```
+
+- 命名空间
+
+  ```
+  declare namespace user {
+    const foo: string
+    function bar(): void
+    const why: () => void
+  }
+  // namespace不可缺少
+  // 访问 user.foo 只是将声明类型包了一层命名空间
+  ```
+
+- 可重用类型
+
+  ```
+  interface GreetingSettings {
+    (): void
+  }
+  
+  type GreetingSettings = () => void
+  
+  declare function greet(setting: GreetingSettings): void
+  // 也就是声明的时候可引用其它类型
+  ```
+
+- 空间组织类型
+
+  ```
+  declare namespace GreetingLib {
+    interface LogOptions {
+      verbose?: boolean
+    }
+    interface AlertOptions {
+      modal: boolean
+      title?: string
+      color?: string
+    }
+  }
+  GreetingLib.LogOptions
+  
+  // 嵌套的命名空间
+  declare namespace GreetingLib.Options {
+      // Refer to via GreetingLib.Options.Log
+      interface Log {
+          verbose?: boolean;
+      }
+      interface Alert {
+          modal: boolean;
+          title?: string;
+          color?: string;
+      }
+  }
+  ```
+
+- 类类型
+
+  ```
+  declare class Greeter {
+    constructor(greeting: string);
+  
+    greeting: string;
+    showGreeting(): void;
+  }
+  ```
+
+- 模块
+
+  ```
+  declare module Runoob { 
+     export class Calc { 
+        doSum(limit:number) : number; 
+     }
+  }
+  ```
+
+  
+
+### 规范
+
+- *不要*使用如下类型`Number`，`String`，`Boolean`或`Object`
+
+- *不要*定义一个从来没使用过其类型参数的泛型类型。
+
+- *应该*给返回值被忽略的回调函数设置`void`
+
+- *不要*在回调函数里使用可选参数,*不要*因为回调函数参数个数不同而写不同的重载
+
+  ```
+  /* 错误 */
+  interface Fetcher {
+      getObject(done: (data: any, elapsedTime?: number) => void): void;
+  }
+  getObject 函数传入一个回调函数,这个函数不要使用可选参数
+  
+  /* 错误 */
+  declare function beforeAll(action: () => void, timeout?: number): void;
+  declare function beforeAll(action: (done: DoneFn) => void, timeout?: number): void;
+  ```
+
+- *不要*把一般的重载放在精确的重载前面：
+
+  ```
+  /* 错误 */
+  declare function fn(x: any): any;
+  declare function fn(x: HTMLElement): number;
+  declare function fn(x: HTMLDivElement): string;
+  
+  var myElem: HTMLDivElement;
+  var x = fn(myElem); // x: any, wat?
+  ```
+
+- 尽可能使用可选类型还有联合类型
+
+### 深入
+
+### 模板
+
+
+
+## 项目配置
+
+- 不带任何输入文件的情况下调用`tsc`，编译器会从当前目录开始去查找`tsconfig.json`文件，
+- 当命令行上指定了输入文件时，`tsconfig.json`文件会被忽略。
+- tsc --watch 必须要有tsconfig.json tsc --init
+- file.include等都没配置会递归目录下所有的默认编译成对应的js 默认`.ts`，`.tsx`，和`.d.ts`
+- `"files"`指定一个包含相对或绝对文件路径的列表。
+- `"include"`和`"exclude"`属性指定一个文件glob匹配模式列表
+- "exclude"可以过滤"include"但不能过滤"files"
+- 关联引用的也会包含进来
+
+- `@types`，`typeRoots`和`types`
+
+  - 默认所有*可见的*"`@types`"包会在编译过程中被包含进来, `./node_modules/@types/`，`../node_modules/@types/`递归等等。
+
+  - 如果指定了`typeRoots`，*只有*`typeRoots`下面的包才会被包含进来。 比如：
+
+    ```
+    {
+       "compilerOptions": {
+           "typeRoots" : ["./typings"]  选择路径
+       }
+    }
+    ```
+
+  - 如果指定了`types`，只有被列出来的包才会被包含进来。 比如：
+
+    ```
+    {
+       "compilerOptions": {
+            "types" : ["node", "lodash", "express"]  选择包
+       }
+    }
+    ```
+
+  - ```
+    export = QueryString;
+    export as namespace qs;
+    
+    declare namespace QueryString {
+        interface IUser {
+            name: string
+          }
+          
+    }
+    
+    // main.ts
+    const obj: qs.IUser = {
+      name: 'asd',
+    }
+    or
+    import QueryString = require('qs')
+    const obj: QueryString.IUser = {
+      name: 'asd',
+    }
+    
+    ```
+
+- 编译选项
+
+  ```
+  {
+    "compilerOptions": {
+      "target": "esnext", // 生成js ECMAScript 版本
+      "module": "esnext", // 指定生成哪个模块系统代码
+      "moduleResolution": "node", // 决定如何处理模块。?
+      "strict": true, // 相当于启动noImplicitAny, --noImplicitThis, --alwaysStrict， --strictNullChecks和 --strictFunctionTypes和--strictPropertyInitialization。
+      "forceConsistentCasingInFileNames": true, // 	禁止对同一个文件的不一致的引用。
+      "allowSyntheticDefaultImports": true, // 允许从没有设置默认导出的模块中默认导入。这并不影响代码的输出，仅为了类型检查。
+      "strictFunctionTypes": false, // 禁用函数参数双向协变检查。
+      "jsx": "preserve", // 在 .tsx文件里支持JSX： "React"或 "Preserve"。查看 JSX。
+      "baseUrl": ".", // 解析非相对模块名的基准目录。
+      "allowJs": true, // 允许编译javascript文件。
+      "sourceMap": true, // 	生成相应的 .map文件。
+      "esModuleInterop": true, // export = QueryString;  export as namespace qs; 可以同时使用
+      "resolveJsonModule": true, // Cannot find module './settings.json'. Consider using '--resolveJsonModule' to 
+      "noUnusedLocals": true, // 	若有未使用的局部变量则抛错。
+      "noUnusedParameters": true, // 若有未使用的参数则抛错。
+      "experimentalDecorators": true, // 启用实验性的ES装饰器。
+      "lib": ["dom", "esnext"], // 	编译过程中需要引入的库文件的列表。
+      "types": ["vite/client", "jest"],
+      "typeRoots": ["./node_modules/@types/", "./types"],
+      "noImplicitAny": false, // 在表达式和声明上有隐含的 any类型时报错。
+      "skipLibCheck": true, // 忽略所有的声明文件（ *.d.ts）的类型检查。
+      "paths": { // 模块名到基于 baseUrl的路径映射的列表。查看 模块解析文档了解详情
+        "/@/*": ["src/*"],
+        "/#/*": ["types/*"]
+      }
+    },
+    "include": [],
+    "exclude": ["node_modules", "tests/server/**/*.ts", "dist", "**/*.js"]
+  }
+  
+  ```
+
+  
 
 ## 泛型
 
@@ -877,18 +1125,34 @@ export namespace SomeNameSpaceName {
 
 ### 类装饰器
 
-类的构造函数作为其唯一的参数。
+- 类的构造函数作为其唯一的参数。
 
-```
-function sealed(constructor: Function) {
-    Object.seal(constructor);
-    Object.seal(constructor.prototype);
-}
-// Object.seal()方法封闭一个对象，阻止添加新属性并将所有现有属性标记为不可配置。当前属性的值只要原来是可写的就可以改变。
+  ```
+  function sealed(constructor: Function) {
+      Object.seal(constructor);
+      Object.seal(constructor.prototype);
+  }
+  // Object.seal()方法封闭一个对象，阻止添加新属性并将所有现有属性标记为不可配置。当前属性的值只要原来是可写的就可以改变。
+  
+  @sealed
+  class Greeter  {}
+  ```
 
-@sealed
-class Greeter  {}
-```
+- 类装饰器工厂
+
+  ```
+  function foo(params: string) {
+  	return (constructor: Function) => {
+  		params
+  		constructor
+  	}
+  }
+  
+  @foo('bar')
+  class Foo {
+  	constructor() { }
+  }
+  ```
 
 ### 方法装饰器
 
@@ -985,6 +1249,63 @@ class Greeter  {}
   解构
   ```
 
-- import type ,用于导入.d.ts声明文件的接口,类型等
+- import type ,export type 用于导入d导出.d.ts声明文件的接口,类型等
+
+- 继承类子类的实例隐示原型对象/既子类的显示原型对象指向父类的实例
+
+- super
+
+  - constructor super() 为exe 父类的constructor
+  - 子类的public 方法中  super 指向父类的显示原型对象  与父类方法所处位置一致
+  - 子类的static  方法中  super 指向父类    与父类方法所处位置一致
+  - 子类this访问方法,优先找自身的显示原型对象,再找父类的显示原型对象
+
+- private 可以修饰 constructor,那么该类无法被继承和实例化
+
+- protected 可以修饰 constructor,可以被继承,子类可以实例化,但是自身父类不能实例化
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
 
   
