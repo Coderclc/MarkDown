@@ -158,7 +158,9 @@
     </template>
     ```
 
-    
+39. file:/// 协议需要设置 publicPath 为./ 且需为hash模式
+
+40. file:/// 协议不能使用cookie cookie为http的产物
 
 
 

@@ -24,3 +24,13 @@
   - 一套构建指令,使用rollup打包你的代码,并且它是预配置的,可以输出用于生产环境的优化过的静态资源
 - index.html
 
+## 依赖预构建
+
+1.  **CommonJS 和 UMD 兼容性:**CommonJS 或 UMD 发布的依赖项转换为 ESM
+2. **性能：** Vite 将有许多内部模块的 ESM 依赖关系转换为单个模块，以提高后续页面加载性能。
+
+- 如果没有找到缓存,既 /.vite ,vite将会抓取源码,既dependencies中且有导入的模块,
+
+## API
+
+- defineConfig 帮手函数，这样不用 jsdoc 注解也可以获取类型提示：

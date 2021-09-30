@@ -126,7 +126,22 @@
   const arr: Array<number>|Array<String> = []
   ```
 
+- unknown
 
+  ```
+  
+  let value: unknown;
+   
+  value.foo.bar;  // Error
+  value.trim();   // Error
+  value();        // Error
+  new value();    // Error
+  value[0][1];    // Error
+  
+  相对于any,t
+  ```
+
+  
 
 ## 变量声明
 
@@ -366,7 +381,33 @@ for(;;){} while(true){} 无线循环
   // 参数数量不同你可以将不同的参数设置为可选。
   ```
 
+- 函数形参对象
 
+  ```
+  function foo(user: { name: string; age?: number } = { name: 'chenlicheng' }) {
+    user.name
+  }
+  foo()
+  
+  or
+  
+  function foo({ name, age }: { name: string; age?: number } = { name: 'chenlicheng' }) {
+    name
+  }
+  foo()
+  
+  or
+  
+  function foo({ name = 'chenlicheng', age }: { name?: string; age?: number }) {
+    console.log(name)
+  }
+  foo({})
+  1,2 为对象有默认值,3为对象中的key有默认值
+  当foo() 会使用整个对象的默认值
+  当foo({}) 会访问对象key的mo'ren
+  ```
+
+  
 
 ## Map
 
@@ -789,6 +830,20 @@ export namespace SomeNameSpaceName {
      export class Calc { 
         doSum(limit:number) : number; 
      }
+  }
+  ```
+
+- 接口
+
+  ```
+  export declare interface IPerson {
+    name: string
+    age: number
+  }
+  // same
+  export  interface IPerson {
+    name: string
+    age: number
   }
   ```
 
@@ -1264,48 +1319,141 @@ export namespace SomeNameSpaceName {
 
 - protected 可以修饰 constructor,可以被继承,子类可以实例化,但是自身父类不能实例化
 
+- ```
+  type Record<K extends keyof any, T> = {
+      [P in K]: T;
+  };
   
+  // 声明了T,并且给了m
+  declare type Recordable<T = any> = Record<string, T> 
+  ```
+
+- ```
+  type Partial<T> = {
+      [P in keyof T]?: T[P];
+  };
+  
+  ```
+
+- ```
+  type Partial<T> = {
+      [P in keyof T]?: T[P];
+  };
+  
+  interface CreateStorageParams  {
+    prefixKey: string
+    storage: Storage
+  }
+  
+   type Options = Partial<CreateStorageParams>
+  
+  将CreateStorageParams 全部转为可选类型
+  ```
+
+- ```typescript
+  面向时临时补类型
+  interface Person {
+    name: string
+    age: number
+  }
+  
+  const obj: Person & { gender: string } = {
+    name: 'chenlichengg',
+    age: 18,
+    gender: 'male'
+  }
+  ```
+
+- ```
+  function isNull(val: unknown): val is null {
+    return val === null
+  }
+  // 返回类型为传入类型的布尔值
+  ```
+
+- ```ts
+  interface InjectionKey<T> extends Symbol {}
+  
+  export declare function provide<T>(key: InjectionKey<T> | string | number, value: T): void;
+  
+  const key: InjectionKey<string> = Symbol()
+  
+  // 面向InjectionKey需要一个T ,而provide根据第一个参数的T限制了value的T,自己推断
+  ```
+
+- ```
+  interface foo1{name:string}
+  interface foo2{age:number}
+  interface foo3{gender:boolean}
+  type foo = foo1&(foo2|foo3)
+  
+  const bar :foo  = {
+    name:'chenlicheng',
+    age:18,
+    gender:true
+  }
+  bar 必须满足 foo1,foo2,可以或不可以满足foo3,相当于可选
+  ```
+
+- ```typescript
+  type ReturnType<T extends (...args: any) => any> = T extends (...args: any) => infer R ? R : any;
+  
+  export let i18n: ReturnType<typeof createI18n>
+  
+  // type ReturnType<T extends (...args: any) => any> 限制T是一个函数
+  ```
 
   
 
-  
 
-  
 
-  
 
-  
 
-  
 
-  
 
-  
 
-  
 
-  
 
-  
 
-  
 
-  
 
-  
 
-  
 
-  
 
-  
 
-  
 
-  
 
-  
 
-  
 
-  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

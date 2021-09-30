@@ -10,8 +10,6 @@ export { AppMain }
 export { default as AppMain } from './AppMain'
 ```
 
-
-
 ## Details
 
 view和api file 对应
@@ -572,3 +570,10 @@ x为后,y为前  x-y即 后大于前,升序,反之为降序
 
 若[1,2,4,3]  则比较完变化的直接比较前面比较过大小的
 
+## SpeedMeasurePlugin
+
+测量各个插件和 loader 所花费的时间
+
+## hard-source-webpack-plugin
+
+为模块提供中间缓存

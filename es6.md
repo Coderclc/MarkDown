@@ -440,3 +440,18 @@ findIndex() 返回第一个符合条件的index
    const iterator = str.matchAll(regexp)
 
    Array.from(iterator,res=>log(res))
+
+
+
+- at()
+
+  array,string  arr[arr.length - 1] === arr.at(-1)
+
+- 顶层await
+
+- await().catch
+
+- Error Cause
+
+  throw Error('Upload job result failed', { cause: err }) 多错误抛出,可在第二个参数指定,在外部try cause 访问err.cause 就可知道是哪一个错误抛出了
+
