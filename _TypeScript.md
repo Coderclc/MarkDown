@@ -379,6 +379,7 @@ for(;;){} while(true){} 无线循环
   
   // 如果参数类型不同，则参数类型应设置为 any。
   // 参数数量不同你可以将不同的参数设置为可选。
+  // 形参类型决定了返回值的类型
   ```
 
 - 函数形参对象
@@ -1060,7 +1061,7 @@ export namespace SomeNameSpaceName {
   foo('foo').length
   ```
 
-- 泛型继承接口
+- 泛型延伸接口
 
   ```
   interface Bar {
@@ -1112,14 +1113,23 @@ export namespace SomeNameSpaceName {
     (...args: T[]) :Array<T>
     attr:T
   }
-  // 第二种在面向时需手动定义泛型类型
+  // 第二种在面向时需手动定义泛型类型 error 理解错了
   ```
 
   ```
   type Arr = <T>(...args: T[]) => Array<T>
+  全程交由ts推导,面向该类型的时候不能指定T的类型
+  调用面向该类型的函数,可以指定T的类型
   or
   type Arr<T> = (...args: T[]) => Array<T>
+  面向该类型的时候必须指定T的类型
+  调用面向该类型的函数,不可以指定T的类型
   ```
+
+  - 切记一定要搞清楚是声明还是调用
+  - 写在()的\<T>只有函数这种情况
+  - 使用type,interface声明类型的时候使用泛型
+  - 声明函数的时候使用泛型
 
 - 泛型与类
 
@@ -1403,27 +1413,237 @@ export namespace SomeNameSpaceName {
   // type ReturnType<T extends (...args: any) => any> 限制T是一个函数
   ```
 
+- ```
+  const num: number = 10;
+  (num as unknown as string).split('');   // 注意，这里和any一样完全可以通过静态检查
+  当num已经拥有类型的时候,需要先转换为any或者unknow
+  ```
+
+- unknow替代 any 的功能同时保留静态检查的能力。
+
+- 非空断言运算符
+
+  ```
+  function onClick(callback: () => void) {
+    callback!();  // 参数是可选入参，加了这个感叹号!之后，TS编译不报错
+  }
+  ```
+
+- 数字分隔符
+
+  ```
+  let num:number = 1_2_345.6_78_9
+  编译出来的代码是没有_de 
+  ```
+
+- keyof  要用in来遍历
+
+  ```
+  keyof 可以获取一个类型所有键值，返回一个联合类型，如下：
+  type Person = {
+    name: string;
+    age: number;
+  }
+  type PersonKey = keyof Person;  // PersonKey得到的类型为 'name' | 'age'
+  keyof 的一个典型用途是限制访问对象的 key 合法化，因为 any 做索引是不被接受的。
+  即 extends keyof
+  ```
+
+- typeof
+
+  ```
+  typeof 是获取一个对象/实例的类型，如下：
+  const me: Person = { name: 'gzx', age: 16 };
+  type P = typeof me;  // { name: string, age: number | undefined }
+  const you: typeof me = { name: 'mabaoguo', age: 69 }  // 可以通过编译
+  ```
+
+- 遍历属性in
+
+  ```
+  in 只能用在类型的定义中，可以对枚举类型进行遍历，如下：
+  // 这个类型可以将任何类型的键值转化成number类型
+  type TypeToNumber<T> = {
+    [key in keyof T]: number
+  }
+  ```
+
+- ```
+  // 普通类型定义
+  type Dog<T> = { name: string, type: T }
+  // 普通类型使用,没有默认值必须声明类型
+  const dog: Dog<number> = { name: 'ww', type: 20 }
   
+  // 类定义
+  class Cat<T> {
+    private type: T;
+    constructor(type: T) { this.type = type; }
+  }
+  // 类使用,作为类型定义,没有默认值必须声明类型,new 实例的时候可以传或者自动推导,因为类可以作为类型,而函数不行
+  const cat: Cat<number> = new Cat<number>(20); // 或简写 const cat = new Cat(20)
+  
+  // 函数定义
+  function swipe<T, U>(value: [T, U]): [U, T] {
+    return [value[1], value[0]];
+  }
+  // 函数使用
+  swipe<Cat<number>, Dog<number>>([cat, dog])  // 或简写 swipe([cat, dog])
+  ```
 
+- ```
+  泛型约束
+  T extends keyof U
+  T 约束为U类型的key组成的联合类型
+  
+  泛型条件
+  T extends keyof U?X:Y
+  判断是否,true的话,T为X类型
+  ```
 
+- infer 推断就是你不用预先指定在泛型列表中，在运行时会自动判断，
 
+  ```
+  type Foo<T> = T extends {t: infer Test} ? Test: string
+  首选看 extends 后面的内容，{t: infer Test}可以看成是一个包含t属性的类型定义，这个t属性的 value 类型通过infer进行推断后会赋值给Test类型，如果泛型实际参数符合{t: infer Test}的定义那么返回的就是Test类型，否则默认给缺省的string类型。举个例子加深下理解：
+  type One = Foo<number>  // string，因为number不是一个包含t的对象类型
+  type Two = Foo<{t: boolean}>  // boolean，因为泛型参数匹配上了，使用了infer对应的type
+  type Three = Foo<{a: number, t: () => void}> // () => void，泛型定义是参数的子集，同样适配
+  ```
 
+- 泛型工具
 
+  - Partial 
 
+    ```
+    用于转换为可选
+    type Partial<T> = {
+     [P in keyof T]?: T[P]
+    }
+    ```
 
+  - Required
 
+    ```
+    type Required<T> = {
+      [P in keyof T]-?: T[P]
+    }
+    ```
 
+  - Record
 
+    ```
+     用于声明对象 ,string|number|symbol:???
+    type Record<K extends keyof any,T> = {
+      [key in K]: T
+    }
+    ```
 
+  - Pick 此工具的作用是将 T 类型中的 K 键列表提取出来，生成新的子键值对类型。
 
+    ```
+    type Pick<T, K extends keyof T> = {
+      [P in K]: T[P]
+    }
+    const bird: Pick<Animal, "name" | "age"> = { name: 'bird', age: 1 }
+    ```
 
+  - exclude
 
+    ```
+    type language = 'ts' | never  *// 任何类型联合never 为那个类型
+    type Exclude<T, U> = T extends U ? never : T
+    type T1 = Exclude<"a" | "b" | "c", "a" | "b">;   // "c"
+    
+    T extends U? T: never 返回T 和 U 的交集。 没有返回never
+    T extends U? never:T  返回T 和 U 无交集的部分 没有返回never
+    ```
 
+  - Omit 
 
+    ```
+    type Omit<T, K extends keyof any> = Pick<T, Exclude<keyof T, K>>;
+    Omit 的结果为Pick相反,既取非并集
+    ```
 
+  - ReturnType
 
+    ```
+    type ReturnType<T extends (...args: any) => any>
+      = T extends (...args: any) => infer R ? R : any;
+      简化一下
+      type ReturnType<T extends func> = T extends () => infer R ? R: any; 
+      泛型条件T是否为一个函数,并且将这个返回值用infer存了起来
+    ```
 
+- type还是interface?
 
+  ```
+  type Name = { name: string };
+  interface IName { name: string };
+  
+  type Person = Name & { age: number };
+  interface IPerson extends IName { age: number }; 
+  // 拓展来看type 简单
+  
+  type I = string|number  
+  
+  declare global {
+      interface Window { MyNamespace: any; }
+  }
+  interface 可以基于window 新添加属性
+  ```
+
+- 什么时候写.d.ts 文件
+
+  - 通过 script 标签引入的第三方库 挂载了一些全局的方法，
+
+  - 使用的第三方 npm 包，但是没有提供声明文件.第三方 npm 包如果有提供声明文件的话，一般会以两种形式存在：一是 `@types/xxx`，另外是在源代码中提供 `.d.ts` 声明文件。第一种的话一般是一些使用量比较高的库会提供，可以通过 `npm i @type/xxx` 尝试安装。如果这两种都不存在的话，那就需要我们自己来定义了
+
+  - 自身团队内比较优秀的 JS 库或插件，为了提升开发体验
+
+  - 全局变量的声明文件主要有以下几种语法：声明文件中只是对类型的定义，不能进行**赋值**。
+
+    ```
+    declare let/const  // 声明全局变量
+    declare function   // 声明全局方法
+    declare class      // 声明全局类
+    declare enum       // 声明全局枚举类型 
+    declare namespace  // 声明（含有子属性的）全局对象
+    interface/type     // 声明全局类型
+    ```
+
+  - npm 包的声明文件主要有以下几种语法：
+
+    ```
+    export const/let  // 导出变量
+    export namespace  // 导出（含有自属性的）对象
+    export default    // ES6 默认导出
+    export =          // commonjs 导出模块
+    ```
+
+  - 拓展原有模块,全局变量.
+
+    ```
+    对于已经有声明定义的模块或者全局变量，可以利用 TS 中的声明合并对其进行拓展。
+    比如在 window 下挂载的一些全局变量:
+    interface Window {
+      readonly request?: any;
+      readonly devToolsExtension?: any;
+      readonly wx?: any;
+    }
+    ```
+
+    ```
+    // 已有模块的拓展
+    declare module "querystring" {
+      function escape(str: string): string;
+      function unescape(str: string): string;
+    }
+    ```
+
+- 类型保护: typeof instanceof in 字面量类型等将代码分割成范围更小的代码块,在这个代码块中,变量的类型是确定的
+
+- is 关键字用于函数返回值类型中,判断参数是否某一类型,并根据结果返回对应的布尔类型,用于自定义限制函数的判断
 
 
 

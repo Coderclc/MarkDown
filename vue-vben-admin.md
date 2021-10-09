@@ -155,13 +155,13 @@ lessc style.less style.css
   @prefix-cls: '@{namespace}-cropper-image'; // remember
   
   .foo {
-    color: @prefix-cls;
+    color: @prefix-cls;   color:'zone-cropper-image'; 有引号
   }
   //if
    @prefix-cls: ~'@{namespace}-cropper-image'; // remember
    
    .foo {
-    color: zone-cropper-image;
+    color: zone-cropper-image; 无引号
   }
   
   then
