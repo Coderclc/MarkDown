@@ -208,7 +208,10 @@ div{
 - overflow-anchor 新内容载入时scroll位置
 - scroll-snap 一次只滑一个元素
 - touch-action:manipulation
-
 - background-attachment: fixed; 背景图
 - element 两张不同颜色堆叠
 - \<picture>
+- background-attachment
+- background-clip   https://mp.weixin.qq.com/s/nf1PjrsKXCiGiRQsTTqqvA
+- color-scheme 适配mac黑色模式
+- div attr contenteditable="true"  可编辑   aspect-ratio: 1/1; 宽高比一比一

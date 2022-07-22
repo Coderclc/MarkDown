@@ -1265,7 +1265,65 @@ export namespace SomeNameSpaceName {
   例如，把 /// <reference types="node" />引入到声明文件，表明这个文件使用了 @types/node/index.d.ts里面声明的名字； 并且，这个包需要在编译阶段与声明文件一起被包含进来。
   ```
 
-  
+
+
+
+## 重映射
+
+```typescript
+// 过滤类型
+// T extends Record<string,any> 限制为索引类型,既判断value断言key
+type FilterString<T extends Record<string,any>> = {
+  [Key in keyof T as T[Key] extends string ? Key: never]: T[Key];
+}
+
+```
+
+
+
+```typescript
+// modify key 
+type Getters<T extends Record<any, any>> = {
+  [Key in keyof T as `get${Capitalize<Key & string>}`]: T[Key];
+}
+
+type Person ={
+  name:'chenlicheng',
+  age:20,
+  gender:true
+}
+
+type foo = Getters<Person> = type foo = {
+    getName: "chenlicheng";
+    getAge: 20;
+    getGender: true;
+}
+```
+
+
+
+```typescript
+key,value 互换
+
+type Flip<T extends Record<any, any>> = {
+  T[Key]: Key // Cannot find name 'Key'.
+}
+
+type Flip<T extends Record<any, any>> = {
+  [Key in keyof T as `${T[Key]}`]: Key  // 无``无true
+}
+type foo = Flip<Person>
+```
+
+
+
+```typescript
+type GetValueType<T> = T extends Promise<infer R>?R:never
+
+type foo  = GetValueType<Promise<string>>
+```
+
+
 
 ## Note
 
@@ -1645,13 +1703,7 @@ export namespace SomeNameSpaceName {
 
 - is 关键字用于函数返回值类型中,判断参数是否某一类型,并根据结果返回对应的布尔类型,用于自定义限制函数的判断
 
-
-
-
-
-
-
-
+- ReadOnly-NotReadOnly  Partial-Required
 
 
 

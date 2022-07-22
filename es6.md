@@ -429,29 +429,194 @@ findIndex() 返回第一个符合条件的index
 
 # es2020
 
-1. **try catch 新格式，允许不写error*
-
-2. 可选链 x.prop1?.prop2  不用担心是否存在,不存在会返回undefined
-
-3. String # matchAll 可以返回一个迭代器,替代 reg.exec
-
-   const regexp = /[a-c]/g  const str = 'abc'
-
-   const iterator = str.matchAll(regexp)
-
-   Array.from(iterator,res=>log(res))
+1. 可选链 x.prop1?.prop2  不用担心是否存在,不存在会返回undefined
 
 
-
-- at()
-
-  array,string  arr[arr.length - 1] === arr.at(-1)
-
-- 顶层await
-
-- await().catch
 
 - Error Cause
 
   throw Error('Upload job result failed', { cause: err }) 多错误抛出,可在第二个参数指定,在外部try cause 访问err.cause 就可知道是哪一个错误抛出了
+
+- for await of
+
+​	
+
+```
+function fn (time) {
+  return new Promise((resolve, reject) => {
+    setTimeout(() => {
+      resolve(`${time}毫秒后我成功啦！！！`)
+    }, time)
+  })
+}
+
+async function asyncFn () {
+  const arr = [fn(3000), fn(1000), fn(1000), fn(2000), fn(500)]
+  for await (let x of arr) {
+    console.log(x) x即为resolve
+  }
+}
+
+asyncFn()
+
+```
+
+- Array.flatMap
+
+```
+let arr = ["科比 詹姆斯 安东尼", "利拉德 罗斯 麦科勒姆"];
+console.log(arr.map(x => x.split(" ")).flat());
+console.log(arr.flatMap(x => x.split(" ")));
+```
+
+- `BigInt`是ES10新加的一种JavaScript数据类型，用来表示表示大于 `2^53 - 1` 的整数，`2^53 - 1`是ES10之前，JavaScript所能表示最大的数字
+
+- Object.fromEntries 与 Object.entries相反
+
+​	
+
+```
+const arr = [
+  ['name', '林三心'],
+  ['age', 22],
+  ['gender', '男']
+]
+
+console.log(Object.fromEntries(arr)) // { name: '林三心', age: 22, gender: '男' }
+```
+
+还有一个用处就是把map转为对象
+
+```
+const map = new Map()
+map.set('name', '林三心')
+map.set('age', 22)
+map.set('gender', '男')
+
+console.log(map) // Map(3) { 'name' => '林三心', 'age' => 22, 'gender' => '男' }
+
+const obj = Object.fromEntries(map)
+console.log(obj) // { name: '林三心', age: 22, gender: '男' }
+```
+
+- String.trimStart && String.trimEnd 对比 trim clear whitespace
+
+- promise
+
+  - `all`方法
+
+  - - 接收一个Promise数组，数组中如有非Promise项，则此项当做成功
+    - 如果所有Promise都成功，则返回成功结果数组
+    - 如果有一个Promise失败，则返回这个失败结果 
+
+  - `race`方法
+
+- -  	接收一个Promise数组，数组中如有非Promise项，则此项当做成功
+  - 哪个Promise最快得到结果，就返回那个结果，无论成功失败
+
+​		  
+
+- all settled
+  - 接收一个Promise数组，数组中如有非Promise项，则此项当做成功
+  - 把每一个Promise的结果，集合成数组，返回
+
+Promise.any 那个成功返回最快成功的,全部失败就失败
+
+- 接收一个Promise数组，数组中如有非Promise项，则此项当做成功
+- 如果有一个Promise成功，则返回这个成功结果
+- 如果所有Promise都失败，则报错
+
+### 37、||= 和 &&=
+
+```
+或等于(||=)   a ||= b 等同于 a || (a = b);
+
+且等于(&&=)   a &&= b 等同于 a && (a = b);
+```
+
+
+
+- try catch 新格式,允许不写error
+
+  ```javascript
+  try{
+  
+  }catch(error){
+    
+  }
+  try{
+  
+  }catch{
+  
+  }
+  ```
+
+- string.matchAll 返回一个iterator 替代reg.exec 递归
+
+  ```javascript
+  const regexp = /[a-c]/g  
+  const str = 'abc'
+  
+  const iterator = str.matchAll(regexp)
+  
+  iterator.next() // {value: [ 'c', index: 2, input: 'abc', groups: undefined ],done: false}
+  // or
+  Array.from(iterator,res=>console.log(res))
+  ```
+
+- at() 数组切片 
+
+  ```javascript
+  const arr = [1,2,3,4]
+  arr[3] === arr[arr.length-1] === arr.at(-1)
+  ```
+
+- 顶层await 允许再非函数作用域使用await
+
+  ```javascript
+  async function foo(){
+  return new Promise(resolve => {
+    setTimeout(() => {
+      resolve('success')
+    }, 2000);
+  });
+  }
+  
+  
+  const res =  await foo()
+  ```
+
+- await().catch
+
+  ```javascript
+  async function foo(){
+  return new Promise((resolve,reject) => {
+    setTimeout(() => {
+      Math.random() >= 0.5?resolve('success'):reject('error')
+    }, 2000);
+  });
+  }
+  
+  const res =  await foo().catch(err=>{
+    console.log(err);
+  })
+  console.log(res);
+  ```
+
+- Error Cause
+
+  ```javascript
+  async function foo(cause) {
+    throw Error('error', { cause })
+  }
+  
+  try {
+    await foo('cause1')
+    await foo('cause2')
+  } catch (error) {
+    console.log(error.cause); // cause1
+  }
+  ```
+
+  
 

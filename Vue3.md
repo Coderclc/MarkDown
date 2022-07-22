@@ -68,7 +68,7 @@
 25. - 引用数据类型新旧值相同的地址(vue2就有这个问题),
     - 似乎不需要deep:true就可以深度监听,(proxy对象不需要强制deep 函数返回对象需要deep,函数返回基本数据类型不需要多深都不需要
     - 无法监听对象的key这样监听.state.count 采用回调函数()=>state.count 
-    - 无法监听到ref 中的proxy中的改变.需要通过.value直接监听proxy,或者开启deep
+    - 无法监听到ref 中的proxy中的改变,还有getter返回的对象中的改变,需要通过.value直接监听proxy,或者开启deep
     
 26. Vue3生命周期 app相对于vm更轻量化, unmounted,beforeUnmount重命名,必须挂载才能执行初始化init,(vue2可以再执行完created之后再挂载)
 
@@ -1373,3 +1373,7 @@ p {
 不用引号也可以,但是编辑器会报错
 
 ```
+
+- slots
+  - slot是一个对象内容在函数中{default:()=>{}}
+  - 使用 {slots?.dafault()} 或者 {slots} 相当用默认执行default
